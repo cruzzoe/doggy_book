@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>View your neighbours dogs</h1>
+    <html>
+        <head>
+            <title>{{ title }} - Dog Booker</title>
+        </head>
+        <body>
+            
+            <h3>Select a dog from the list below</h3>
+            {% for dog in dogs %}
+            <div><p>{{ dog.dog_name }}</b></p></div>
+        {% endfor %}
+        </body>
+    </html>
+{% endblock %}

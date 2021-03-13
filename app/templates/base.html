@@ -1,0 +1,28 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Dog Booker</title>
+        {% else %}
+        <title>Dog Booker</title>
+        {% endif %}
+    </head>
+    <body>
+        <div>
+            Dog Booker:
+            <a href="/index">Home</a>
+            <a href="/register_dog">Register Dog</a>
+            <a href="/view_dogs">View Dogs</a>
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </body>
+</html>
