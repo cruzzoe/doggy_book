@@ -41,8 +41,7 @@ class RegistrationDogForm(FlaskForm):
     submit = SubmitField('Submit')
     
 class ScheduleForm(FlaskForm):
-    # dog = SelectField('Selected Dog: ', default='dogA',choices=['dogA'])
-    dog = SelectField('Selected Dog: ')
+    dog = SelectField('Selected Dog: ', validate_choice=True)
     date = StringField('Date dd/mm/yy', validators=[DataRequired()])
     start = StringField('Start time (24hr)', validators=[DataRequired()])
     end = StringField('End time (24hr)', validators=[DataRequired()])

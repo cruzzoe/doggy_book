@@ -44,7 +44,6 @@ def save_down_dog(form):
             'owner': str(form.personname.data),
             'phone': str(form.phone.data),
             'email': str(form.email.data)}
-    # import pdb; pdb.set_trace()
     data_dir = os.environ['DATA_DIR']
     file_path = os.path.join(data_dir, str(form.email.data) + '.json')
     with open(file_path, 'wt') as outfile:
@@ -84,8 +83,6 @@ def register_dog():
     """Submit your dog to the site"""
     form = RegistrationDogForm()
     if form.validate_on_submit():
-        # import pdb; pdb.set_trace()
-        # user_id=User.query.get(1)
         user_id = current_user
         dog = Dog(dog_name=form.dog_name.data, gender=form.gender.data, age=form.age.data, owner=user_id)
         db.session.add(dog)
@@ -133,7 +130,7 @@ def view_dogs():
     dogs = Dog.query.all()
     return render_template('view_dogs.html', title='View Dogs', dogs=dogs)
 
-@app.route('/schedule')
+@app.route('/schedule', methods=['GET', 'POST'])
 def schedule():
     # Display all your dogs
     # Who are you?
@@ -143,15 +140,14 @@ def schedule():
     # dogs = Dog.query.all()
     # user = User.query.get(id)
     user_id = current_user.id
-    # import pdb; pdb.set_trace()
     form = ScheduleForm()
-    # [(g.id, g.name) for g in Group.query.order_by('name')]
     dogs = [dog.dog_name for dog in Dog.query.filter_by(user_id=user_id)]
     form.dog.choices = dogs
 
     if form.validate_on_submit():
-        # user_id = current_user
-        subject = Dog.query.get(1)
+        user_id = current_user
+        subject = Dog.query.filter_by(dog_name=form.dog.data).first()
+        
         slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject)
         db.session.add(slot)
         db.session.commit()
@@ -168,7 +164,15 @@ def book_dog():
 
 @app.route('/book_slot')
 def book_slot():
-    dog_name = request.args.get('slot')
-    dog = Dog.query.filter_by(dog_name=dog_name).first()
-    slots = dog.slots.all()
-    return render_template('book_slot.html', title='Slot booked', dog=dog, slots=slots)
+    slot = request.args.get('slot')
+    slot = Slot.query.filter_by(id=slot).first()
+    dog_name = slot.subject.dog_name
+    return render_template('book_slot.html', title='Slot booked', slot=slot, dog_name=dog_name)
+
+@app.route('/confirmed')
+def confirmed():
+    flash('You\'r booking is confirmed! A text msg has been sent to both parties.')
+    # slot = request.args.get('slot')
+    # slot = Slot.query.filter_by(id=slot).first()
+    # dog_name = slot.subject.dog_name
+    return  redirect(url_for('index'))
