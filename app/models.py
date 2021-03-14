@@ -13,6 +13,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     dogs = db.relationship('Dog', backref='owner', lazy='dynamic')
+    booking_slot = db.relationship('Slot', backref='booker', lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -44,6 +45,7 @@ class Slot(db.Model):
     status = db.Column(db.String(140))
     # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     dog_name = db.Column(db.Integer, db.ForeignKey('dog.id'))
+    booking_user = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def __repr__(self):
