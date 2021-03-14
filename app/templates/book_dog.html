@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <html>
+        <head>
+            <h1>Booking form for: {{ dog }}!!!</h1>
+            <title>{{ title }} - Dog Booker</title>
+        </head>
+        <body>
+            <h3>Please select a slot from the list below.</h3>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Start Time</th> 
+                    <th>End Time</th> 
+                </tr>
+                {% for slot in slots %}
+                <tr>
+                    <td>{{slot.date}}</td>
+                    <td>{{slot.start}}</td> 
+                    <td>{{slot.end}}</td> 
+                    <td><a href="{{ url_for('book_slot', slot=slot.id) }}">Click to Book!</a></td> 
+                </tr>
+                {% endfor %}
+
+        </body>
+    </html>
+{% endblock %}

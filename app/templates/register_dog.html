@@ -1,24 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Register Dog</h1>
-    <form action="" method="post" novalidate>
+    <h1>Enter your dog's details</h1>
+    <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
-            {{ form.dogname.label }}<br>
-            {{ form.dogname(size=32) }}
+            {{ form.dog_name.label }}<br>
+            {{ form.dog_name(size=32) }}<br>
+            {% for error in form.dog_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
         </p>
         <p>
-            {{ form.personname.label }}<br>
-            {{ form.personname(size=32) }}
+            {{ form.gender.label }}<br>
+            {{ form.gender(size=64) }}<br>
+            {% for error in form.gender.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
         </p>
         <p>
-            {{ form.phone.label }}<br>
-            {{ form.phone(size=32) }}
-        </p>
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email(size=32) }}
+            {{ form.age.label }}<br>
+            {{ form.age(size=32) }}<br>
+            {% for error in form.age.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
         </p>
         <p>{{ form.submit() }}</p>
     </form>

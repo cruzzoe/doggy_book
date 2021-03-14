@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Enter your dogs availability</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.dog.label }}<br>
+            {{ form.dog(size=2) }}<br>
+        </p>
+        <p>
+            {{ form.date.label }}<br>
+            {{ form.date(size=32) }}<br>
+            {% for error in form.date.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.start.label }}<br>
+            {{ form.start(size=64) }}<br>
+            {% for error in form.start.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.end.label }}<br>
+            {{ form.end(size=32) }}<br>
+            {% for error in form.end.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

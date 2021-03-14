@@ -1,17 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>View your neighbours dogs</h1>
-    <html>
-        <head>
-            <title>{{ title }} - Dog Booker</title>
-        </head>
-        <body>
-            
-            <h3>Select a dog from the list below</h3>
-            {% for dog in dogs %}
-            <div><p>{{ dog.dog_name }}</b></p></div>
-        {% endfor %}
-        </body>
-    </html>
+    <table>
+    <tr>
+        <th>Name</th>
+        <th>Age</th> 
+        <th>Owner</th> 
+        <th>Number of Slots Free</th>
+    </tr>
+    {% for dog in dogs %}
+    <tr>
+        <td>{{dog.dog_name}}</td>
+        <td>{{dog.age}}</td> 
+        <td>{{dog.owner}}</td> 
+        <td>77</td>
+        <td><a href="{{ url_for('book_dog', dog_name=dog.dog_name) }}">Click to Book!</a></td> 
+    </tr>
+    {% endfor %}
+    </table>
 {% endblock %}
