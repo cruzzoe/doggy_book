@@ -43,7 +43,6 @@ class Slot(db.Model):
     start = db.Column(db.String(140))
     end = db.Column(db.String(140))
     status = db.Column(db.String(140))
-    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     dog_name = db.Column(db.Integer, db.ForeignKey('dog.id'))
     booking_user = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)

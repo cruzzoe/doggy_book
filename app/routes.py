@@ -36,33 +36,6 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-def save_down_dog(form):
-    """Given form, save down data as json"""
-
-    # make a dict to save info and save down as json
-    data = {'dog_name': str(form.dogname.data),
-            'owner': str(form.personname.data),
-            'phone': str(form.phone.data),
-            'email': str(form.email.data)}
-    data_dir = os.environ['DATA_DIR']
-    file_path = os.path.join(data_dir, str(form.email.data) + '.json')
-    with open(file_path, 'wt') as outfile:
-        json.dump(data, outfile)
-
-
-# @app.route('/register_dog', methods=['GET', 'POST'])
-# def register():
-#     form = RegisterForm()
-#     if form.validate_on_submit():
-#         # flash('Login requested for user {}, remember_me={}'.format(
-#             # form.username.data, form.remember_me.data))
-
-#         # Save down new dog info to AWS
-#         save_down_dog(form)
-#         flash('Dog Registered: {}'.format(form.dogname.data))
-#         return redirect('/index')
-#     return render_template('register.html', title='Register Dog', form=form)
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -91,54 +64,13 @@ def register_dog():
         return redirect(url_for('index'))
     return render_template('register_dog.html', title='Register', form=form)
 
-# @login_required
-# @app.route('/enter_slots', methods=['GET', 'POST'])
-# def enter_slots():
-#     """Pick a slot for when the dog is free"""
-#     form = FreeSlotsForm()
-#     if form.validate_on_submit():
-#         user = User(username=form.username.data, email=form.email.data)
-#         user.set_password(form.password.data)
-#         db.session.add(user)
-#         db.session.commit()
-#         flash('Congratulations, you\'re dog is now on the site!')
-#         return redirect(url_for('index'))
-#     return render_template('register.html', title='Register', form=form)
-
-
-# def load_available_dogs():
-#     data_dir = os.environ['DATA_DIR']
-#     dogs = os.listdir(data_dir)
-#     res = []
-#     for fname in dogs:
-#         path = os.path.join(data_dir, fname)
-#         with open(path) as json_file:
-#             data = json.load(json_file)
-#             res.append(data)
-#     return res
-
-
-# @app.route('/')
-# @app.route('/view_dogs')
-# def view_dogs():
-#     dogs = load_available_dogs()
-#     return render_template('view_dogs.html', title='View Dogs', dogs=dogs)
-
 @app.route('/view_dogs')
 def view_dogs():
-    # dogs = load_available_dogs()
     dogs = Dog.query.all()
     return render_template('view_dogs.html', title='View Dogs', dogs=dogs)
 
 @app.route('/schedule', methods=['GET', 'POST'])
 def schedule():
-    # Display all your dogs
-    # Who are you?
-
-    # Load dogs belonging to you
-    # For dog belonging to you enter in new schedule
-    # dogs = Dog.query.all()
-    # user = User.query.get(id)
     user_id = current_user.id
     form = ScheduleForm()
     dogs = [dog.dog_name for dog in Dog.query.filter_by(user_id=user_id)]
@@ -180,3 +112,20 @@ def confirmed():
     db.session.add(slot)
     db.session.commit()
     return  redirect(url_for('index'))
+
+@app.route('/my_bookings')
+def my_bookings():
+    return  redirect(url_for('index'))
+
+@app.route('/cancel')
+def cancel():
+    return  redirect(url_for('index'))
+
+@app.route('/view_schedule', methods=['GET', 'POST'])
+def view_schedule():
+    user_id = current_user.id
+    form = ScheduleForm()
+    dogs = [dog.dog_name for dog in Dog.query.filter_by(user_id=user_id)]
+    form.dog.choices = dogs
+
+    return render_template('view_schedule.html', title='View your dogs availability', form=form)
