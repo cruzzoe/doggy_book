@@ -1,1 +1,7 @@
 flask
+flask_wtf
+flask_sqlalchemy
+flask_migrate
+flask_login
+python-dotenv
+email_validator
