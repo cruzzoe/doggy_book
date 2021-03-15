@@ -10,21 +10,21 @@
         </p>
         <p>
             {{ form.date.label }}<br>
-            {{ form.date(size=32) }}<br>
+            {{ form.date(size=4) }}<br>
             {% for error in form.date.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
             {{ form.start.label }}<br>
-            {{ form.start(size=64) }}<br>
+            {{ form.start(size=3) }}<br>
             {% for error in form.start.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
             {{ form.end.label }}<br>
-            {{ form.end(size=32) }}<br>
+            {{ form.end(size=3) }}<br>
             {% for error in form.end.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}

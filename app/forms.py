@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
+import datetime
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -35,8 +36,18 @@ class RegistrationDogForm(FlaskForm):
     
 class ScheduleForm(FlaskForm):
     dog = SelectField('Selected Dog: ', validate_choice=True)
-    date = StringField('Date dd/mm/yy', validators=[DataRequired()])
-    start = StringField('Start time (24hr)', validators=[DataRequired()])
-    end = StringField('End time (24hr)', validators=[DataRequired()])
+    now = datetime.date.today()
+    choices = []
+    for delta in range(0, 15):
+        choices.append(now + datetime.timedelta(days=delta))
+    date = SelectField('Date: ', choices=choices, validate_choice=True)
+    
+    choices = list(range(0, 23))
+    choices = [str(x) + ':00' for x in choices]
+    # for delta in range(0, 15):
+    #     choices.append(now + datetime.timedelta(days=delta))
+    start = SelectField('Start time (24hr)', choices=choices, validate_choice=True)
+    # end = StringField('End time (24hr)', validators=[DataRequired()])
+    end = SelectField('End time (24hr)', choices=choices, validate_choice=True)
     submit = SubmitField('Submit')
 
