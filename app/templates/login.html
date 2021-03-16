@@ -1,19 +1,53 @@
 {% extends "base.html" %}
-
+ 
 {% block content %}
-    <h1>Sign In</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
-        </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p>{{ form.submit() }}</p>
-    </form>
-    <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
+<section class="page-section" id="login">
+    <div class="container"> 
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Login</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <!-- Contact Section Form-->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+ 
+                <!--<h2>Please sign in below</h2>-->
+                <form action="" method="post" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="control-group">
+                        <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                            <label>{{ form.username.label }}</label>
+                            {{ form.username(size=32, class_="form-control", placeholder="Username") }}
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                            <label>{{ form.password.label }}</label>
+                            {{ form.password(size=32, class_="form-control", placeholder="Password") }}
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="form-group controls mb-0 pb-2">
+                            <label>{{ form.remember_me() }}</label>
+                            {{ form.remember_me.label }}
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="form-group"></div>
+                            {{ form.submit(class_="btn btn-primary btn-xl") }}
+                    </div>
+                
+                </form>
+                <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
