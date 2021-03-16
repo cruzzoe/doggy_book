@@ -1,34 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Enter your dogs availability</h1>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.dog.label }}<br>
-            {{ form.dog(size=2) }}<br>
-        </p>
-        <p>
-            {{ form.date.label }}<br>
-            {{ form.date(size=4) }}<br>
-            {% for error in form.date.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.start.label }}<br>
-            {{ form.start(size=3) }}<br>
-            {% for error in form.start.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.end.label }}<br>
-            {{ form.end(size=3) }}<br>
-            {% for error in form.end.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+    <h1>Your Available Slots</h1>
+    {% for dog in dogs %}
+        <h3>{{ dog.dog_name}}</h1>
+        <table>
+        <tr>
+            <th>Date</th>
+            <th>Start</th> 
+            <th>End</th> 
+            <th>Booked By</th>
+        </tr>
+        {% for slot in dog.slots.all() %}
+        <tr>
+            <td>{{slot.dog_name}}</td>
+            <td>{{slot.start}}</td> 
+            <td>{{slot.end}}</td> 
+            <td>{{slot.booker.username}}</td>
+            <td><a href="{{ url_for('delete_slot', slot=slot.id) }}">Delete Slot</a></td> 
+        </tr>
+        {% endfor %}
+        </table>
+    {% endfor %}
 {% endblock %}

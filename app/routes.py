@@ -8,6 +8,8 @@ from werkzeug.urls import url_parse
 from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm
 from app import db
 
+BOOKED = 'BOOKED'
+
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -47,6 +49,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
+        login_user(user)
         return redirect(url_for('register_dog'))
     return render_template('register.html', title='Register', form=form)
 
@@ -67,31 +70,19 @@ def register_dog():
 @app.route('/view_dogs')
 def view_dogs():
     dogs = Dog.query.all()
-    return render_template('view_dogs.html', title='View Dogs', dogs=dogs)
-
-@app.route('/schedule', methods=['GET', 'POST'])
-def schedule():
-    user_id = current_user.id
-    form = ScheduleForm()
-    dogs = [dog.dog_name for dog in Dog.query.filter_by(user_id=user_id)]
-    form.dog.choices = dogs
-
-    if form.validate_on_submit():
-        user_id = current_user
-        subject = Dog.query.filter_by(dog_name=form.dog.data).first()
-        
-        slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject)
-        db.session.add(slot)
-        db.session.commit()
-        flash('Schedule amended')
-        return redirect(url_for('index'))
-    return render_template('schedule.html', title='Amend your dogs availability', form=form)
+    res = []
+    for dog in dogs:
+        if dog.owner != current_user:
+            res.append(dog)
+    # import pdb; pdb.set_trace()
+    return render_template('view_dogs.html', title='View Dogs', dogs=res)
 
 @app.route('/book_dog')
 def book_dog():
     dog_name = request.args.get('dog_name')
     dog = Dog.query.filter_by(dog_name=dog_name).first()
     slots = dog.slots.all()
+    slots = [x for x in slots if x.status != BOOKED]
     return render_template('book_dog.html', title='Slot booked', dog=dog, slots=slots)
 
 @app.route('/book_slot')
@@ -108,7 +99,7 @@ def confirmed():
     # import pdb; pdb.set_trace()
     slot = Slot.query.filter_by(id=slot).first()
     slot.booker = current_user
-    slot.status = 'BOOKED'
+    slot.status = BOOKED
     db.session.add(slot)
     db.session.commit()
     return  redirect(url_for('index'))
@@ -119,13 +110,55 @@ def my_bookings():
 
 @app.route('/cancel')
 def cancel():
+    """Cancels a booking"""
     return  redirect(url_for('index'))
 
-@app.route('/view_schedule', methods=['GET', 'POST'])
-def view_schedule():
+
+@app.route('/delete_slot')
+def delete_slot():
+    slot = request.args.get('slot')
+    slot = Slot.query.filter_by(id=slot).first()
+    db.session.delete(slot)
+    db.session.commit()
+    flash('Slot deleted')
+    return  redirect(url_for('view_schedule'))
+
+
+@app.route('/new_slot', methods=['GET', 'POST'])
+def new_slot():
+    """Book a new slot for dogs owned by user"""
     user_id = current_user.id
     form = ScheduleForm()
     dogs = [dog.dog_name for dog in Dog.query.filter_by(user_id=user_id)]
     form.dog.choices = dogs
 
-    return render_template('view_schedule.html', title='View your dogs availability', form=form)
+    if form.validate_on_submit():
+        user_id = current_user
+        subject = Dog.query.filter_by(dog_name=form.dog.data).first()
+        
+        slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject)
+        db.session.add(slot)
+        db.session.commit()
+        flash('Schedule amended')
+        return redirect(url_for('index'))
+    return render_template('new_slot.html', title='Amend your dogs availability', form=form)
+
+@app.route('/view_schedule')
+def view_schedule():
+    """View slots existing for your dog"""
+    user_id = current_user.id
+    dogs = [dog for dog in Dog.query.filter_by(user_id=user_id)]
+    return render_template('schedule.html', title='View slots', dogs=dogs)
+
+@app.route('/bookings')
+def bookings():
+    """View user bookings made for others dogs"""
+    # dogs = Dog.query.all()
+    # res = []
+    # for dog in dogs:
+    #     if dog.owner != current_user:
+    #         res.append(dog.slots)
+
+    slots = Slot.query.filter_by(booking_user=current_user.id).all()
+    import pdb; pdb.set_trace()
+    return render_template('bookings.html', title='View slots', slots=slots)

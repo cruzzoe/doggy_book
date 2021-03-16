@@ -2,6 +2,7 @@ from datetime import datetime
 from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from sqlalchemy.ext.hybrid import hybrid_property
 
 @login.user_loader
 def load_user(id):
@@ -33,6 +34,11 @@ class Dog(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     slots = db.relationship('Slot', backref='subject', lazy='dynamic')
+
+    @hybrid_property
+    def free_slots(self):
+        slots = [x for x in self.slots if x.status is None]
+        return slots
 
     def __repr__(self):
         return '<Dog {}>'.format(self.dog_name)
