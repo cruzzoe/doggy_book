@@ -15,7 +15,7 @@
     <!--New booking section starts here-->
     <h2>Here is a list of dogs you can book from. Please click to book.</h2>
     </br>
-    <table class="table">
+    <table class="table table-hover">
         <thead>
           <tr>
             <th scope="col">Name</th>
@@ -23,27 +23,22 @@
             <th scope="col">Owner</th>
             <th scope="col">End</th>
             <th scope="col">No of Slots Free</th>
+            <th scope="col">Book</th>
           </tr>
         </thead>
         <tbody>
+            
             {% for dog in dogs %}
             <tr>
                 <td>{{dog.dog_name}}</td>
-            </tr>
-            <tr>
                 <td>{{dog.age}}</td> 
-            </tr>
-            <tr>
                 <td>{{dog.age}}</td>
-            </tr>
-            <tr>
                 <td>{{dog.owner.username}}</td>
-            </tr>
-            <tr>
                 <td>{{dog.free_slots|length}} </td>
-            </tr>
                 <td><a href="{{ url_for('book_dog', dog_name=dog.dog_name) }}">Click to Book!</a></td>
+            </tr>
             {% endfor %}
+            
         </tbody>
     </table>
 {% endblock %}

@@ -19,12 +19,13 @@
     <p>Essential Info: {{ dog.info }}</p>
     <h4>Please select a slot from the list below.</h4>
         <title>{{ title }} - Dog Booker</title>
-        <table class="table">
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th scope="col">Date</th>
                 <th scope="col">Start Time</th>
-                <th scope="col">End Time</th> 
+                <th scope="col">End Time</th>
+                <th scope="col">Book</th>
             </tr>
             </thead>
             {% for slot in slots %}

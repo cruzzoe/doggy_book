@@ -1,34 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Enter your dogs availability</h1>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.dog.label }}<br>
-            {{ form.dog(size=2) }}<br>
-        </p>
-        <p>
-            {{ form.date.label }}<br>
-            {{ form.date(size=4) }}<br>
-            {% for error in form.date.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.start.label }}<br>
-            {{ form.start(size=3) }}<br>
-            {% for error in form.start.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.end.label }}<br>
-            {{ form.end(size=3) }}<br>
-            {% for error in form.end.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
-{% endblock %}
+<!--Linked to My Dogs and Add slot page-->
+<section class="page-section" id="add_slots">
+    <div class="container"> 
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Add Available Slots</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+            <h2>Enter your dogs availability</h2>
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.dog.label }}<br>
+                    {{ form.dog(size=2) }}<br>
+                </p>
+                <p>
+                    {{ form.date.label }}<br>
+                    {{ form.date(size=4) }}<br>
+                    {% for error in form.date.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.start.label }}<br>
+                    {{ form.start(size=3) }}<br>
+                    {% for error in form.start.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.end.label }}<br>
+                    {{ form.end(size=3) }}<br>
+                    {% for error in form.end.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.submit(class_="btn btn-primary btn-xl") }}
+                </p>
+                    
+                
+            </form>
+        {% endblock %}

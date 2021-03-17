@@ -1,37 +1,51 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Enter your dog's details</h1>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.dog_name.label }}<br>
-            {{ form.dog_name(size=20) }}<br>
-            {% for error in form.dog_name.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.gender.label }}<br>
-            {{ form.gender(size=2) }}<br>
-            {% for error in form.gender.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.info.label }}<br>
-            {{ form.info(cols=50, rows=4) }}<br>
-            {% for error in form.info.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.age.label }}<br>
-            {{ form.age(size=4) }}<br>
-            {% for error in form.age.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+<!--Linked to My Dogs and Add slot page-->
+<section class="page-section" id="add_slots">
+    <div class="container"> 
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Edit My Dog</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <h2>Enter your dog's details</h2>
+        
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.dog_name.label }}<br>
+                {{ form.dog_name(size=20) }}<br>
+                {% for error in form.dog_name.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.gender.label }}<br>
+                {{ form.gender(size=2) }}<br>
+                {% for error in form.gender.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.info.label }}<br>
+                {{ form.info(cols=50, rows=4) }}<br>
+                {% for error in form.info.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.age.label }}<br>
+                {{ form.age(size=4) }}<br>
+                {% for error in form.age.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.submit(class_="btn btn-primary btn-xl") }}
+            </p>
+        </form>
 {% endblock %}
