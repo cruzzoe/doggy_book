@@ -37,7 +37,8 @@ class Dog(db.Model):
 
     @hybrid_property
     def free_slots(self):
-        slots = [x for x in self.slots if x.status is None]
+        # TODO - bug here. Doesn't respect times of slot when calculating free slot.
+        slots = [x for x in self.slots.all() if x.status is None and datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.utcnow().date()]
         return slots
 
     def __repr__(self):
@@ -49,7 +50,7 @@ class Slot(db.Model):
     start = db.Column(db.String(140))
     end = db.Column(db.String(140))
     status = db.Column(db.String(140))
-    dog_name = db.Column(db.Integer, db.ForeignKey('dog.id'))
+    dog_id = db.Column(db.Integer, db.ForeignKey('dog.id'))
     booking_user = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 

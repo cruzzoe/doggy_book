@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+    <h3><a href="{{ url_for('register_dog') }}/">Register Dog</a></h3>
+    <h3><a href="{{ url_for('new_slot') }}">Add Slot</a></h3>
     <h1>Your Available Slots</h1>
     {% for dog in dogs %}
         <h3>{{ dog.dog_name}}</h1>
         <table>
         <tr>
+            <th>Dog Name</th>
             <th>Date</th>
             <th>Start</th> 
             <th>End</th> 
@@ -13,7 +17,8 @@
         </tr>
         {% for slot in dog.slots.all() %}
         <tr>
-            <td>{{slot.dog_name}}</td>
+            <td>{{slot.subject.dog_name}}</td>
+            <td>{{slot.date}}</td> 
             <td>{{slot.start}}</td> 
             <td>{{slot.end}}</td> 
             <td>{{slot.booker.username}}</td>
