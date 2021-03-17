@@ -23,7 +23,7 @@
             <th scope="col">Start</th>
             <th scope="col">End</th>
             <th scope="col">Booked By</th>
-            <th scope="col">Delete</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -34,7 +34,7 @@
                 <td>{{slot.start}}</td>
                 <td>{{slot.end}}</td>
                 <td>{{slot.booker.username}}</td>
-                <td><a href="{{ url_for('delete_slot', slot=slot.id) }}">Delete Booking</a></td> 
+                <td><a href="{{ url_for('cancel_slot', slot=slot.id) }}">Cancel Booking</a></td> 
             </tr>
             {% endfor %}
         </tbody> 

@@ -7,7 +7,9 @@ from werkzeug.urls import url_parse
 from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm
 from app import db
 
+# BOOKING STATUS
 BOOKED = 'BOOKED'
+FREE = 'FREE'
 
 @app.route('/')
 @app.route('/index')
@@ -136,7 +138,19 @@ def confirmed():
     slot.status = BOOKED
     db.session.add(slot)
     db.session.commit()
-    return  redirect(url_for('index'))
+    return  redirect(url_for('bookings'))
+
+@app.route('/cancel_slot')
+@login_required
+def cancel_slot():
+    """Cancel booking and make available again for other users to book."""
+    slot = request.args.get('slot')
+    slot = Slot.query.filter_by(id=slot).first()
+    slot.status = FREE
+    db.session.commit()
+    # TODO Deb - doesn't display flash msg.
+    flash('Slot status cleared')
+    return redirect(url_for('view_schedule'))
 
 @app.route('/delete_slot')
 @login_required
