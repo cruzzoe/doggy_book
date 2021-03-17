@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<<<<<<< HEAD
     <table>
     <tr>
         <th>Name</th>
@@ -18,4 +19,52 @@
     </tr>
     {% endfor %}
     </table>
+=======
+<section class="page-section" id="view_dogs">
+    <div class="container"> 
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">View Dogs</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Age</th>
+                <th scope="col">Owner</th>
+                <th scope="col">No of Slots Free</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for dog in dogs %}
+              <tr>
+                <th scope="col">1</th>
+                <td>{{dog.dog_name}}</td>
+              </tr>
+              <tr>
+                <th scope="col">2</th>
+                <td>{{dog.age}}</td>
+              </tr>
+              <tr>
+                <th scope="col">3</th>
+                <td>{{dog.owner.username}}</td>
+              </tr>
+              <tr>
+                <th scope="col">4</th>
+                <td>{{dog.slots.all()|length}}</td>
+              </tr>
+              <tr>
+                <th scope="col">5</th>
+                <td><a href="{{ url_for('book_dog', dog_name=dog.dog_name) }}">Click to Book!</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+>>>>>>> Updates to templates and imgs
 {% endblock %}
