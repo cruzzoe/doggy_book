@@ -74,14 +74,20 @@ def edit_dog():
     """Submit your dog to the site"""
     user_id = current_user
     dog = Dog.query.filter_by(owner=user_id).first()
+
+    if not dog:
+        return redirect(url_for('register_dog'))
+
     form = RegistrationDogForm()
     if form.validate_on_submit():
         user_id = current_user
-        # dog = Dog(dog_name=form.dog_name.data, gender=form.gender.data, info=form.info.data, age=form.age.data, owner=user_id)
         dog.dog_name = form.dog_name.data
+        dog.gender = form.gender.data
+        dog.info = form.info.data
+        dog.age = form.age.data
         db.session.commit()
         flash('Dog Updated')
-        return redirect(url_for('index'))
+        return redirect(url_for('view_schedule'))
     
     elif request.method == 'GET':
         form.dog_name.data = dog.dog_name
@@ -158,7 +164,7 @@ def new_slot():
         db.session.add(slot)
         db.session.commit()
         flash('Schedule amended')
-        return redirect(url_for('index'))
+        return redirect(url_for('view_schedule'))
     return render_template('new_slot.html', title='Amend your dogs availability', form=form)
 
 @app.route('/view_schedule')
