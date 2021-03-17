@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!-- Once logged in, this page will display to welcome users-->
 <!-- Masthead-->
 <section class="page-section" id="home"></section>
         <header class="masthead bg-primary text-white text-center">
@@ -22,7 +23,7 @@
             </br>
                 <body>
                     <h2>Hi, {{ current_user.username }}!</h2>
-                    <h3>Please register your dog(s) or select View Dogs to make a booking.</h3>
+                    <h3>Please go to My Dogs to resigter your dog(s) and add available slots. You can also go to New Booking to make a booking.</h3>
                 </body>
             </p>
         </div>

@@ -1,29 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <html>
-        <head>
-            <h1>Booking form for: {{ dog.dog_name }}</h1>
-            <title>{{ title }} - Dog Booker</title>
-            <p>Essential Info: {{ dog.info }}</p>
-        </head>
-        <body>
-            <h3>Please select a slot from the list below.</h3>
-            <table>
-                <tr>
-                    <th>Date</th>
-                    <th>Start Time</th> 
-                    <th>End Time</th> 
-                </tr>
-                {% for slot in slots %}
-                <tr>
-                    <td>{{slot.date}}</td>
-                    <td>{{slot.start}}</td> 
-                    <td>{{slot.end}}</td> 
-                    <td><a href="{{ url_for('book_slot', slot=slot.id) }}">Click to Book!</a></td> 
-                </tr>
-                {% endfor %}
-
-        </body>
-    </html>
+<!-- Linked to New Booking where users can see available dogs and allows you to make bookings-->
+<section class="page-section" id="book_dog">
+    <div class="container"> 
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">New Booking</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <!--<h2>Make new bookings to look after your neighbours' dogs</h2>-->
+    <!--New booking section starts here-->
+    </br>
+    <h4>Available slots for: {{ dog.dog_name }}</h4>
+    <p>Essential Info: {{ dog.info }}</p>
+    <h4>Please select a slot from the list below.</h4>
+        <title>{{ title }} - Dog Booker</title>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Start Time</th>
+                <th scope="col">End Time</th> 
+            </tr>
+            </thead>
+            {% for slot in slots %}
+            <tr>
+                <td>{{slot.date}}</td>
+                <td>{{slot.start}}</td> 
+                <td>{{slot.end}}</td> 
+                <td><a href="{{ url_for('book_slot', slot=slot.id) }}">Click to Book!</a></td> 
+            </tr>
+            {% endfor %}
+        </table>                     
 {% endblock %}

@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!--This is linked to My Dogs-->
+<section class="page-section" id="bookings">
+    <div class="container"> 
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">My Dog's Available Slots</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
 
     <h3><a href="{{ url_for('register_dog') }}/">Register Dog</a></h3>
     <h3><a href="{{ url_for('new_slot') }}">Add Slot</a></h3>

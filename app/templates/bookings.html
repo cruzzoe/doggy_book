@@ -1,24 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Your Bookings</h1>
-    <table>
-        <tr>
-            <th>Dog</th>
-            <th>Date</th>
-            <th>Start</th> 
-            <th>End</th> 
-            <th>Booked By</th>
-        </tr>
-    {% for slot in slots %}
-    <tr>
-        <td>{{slot.subject.dog_name}}</td>
-        <td>{{slot.date}}</td>
-        <td>{{slot.start}}</td> 
-        <td>{{slot.end}}</td> 
-        <td>{{slot.booker.username}}</td>
-        <td><a href="{{ url_for('delete_slot', slot=slot.id) }}">Delete Booking</a></td> 
-    </tr>
-    {% endfor %}
+<!--Linked to My Bookings on Navbar. Allows you to see user's bookings-->
+<section class="page-section" id="bookings">
+    <div class="container"> 
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Bookings</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+
+    <h2>My Bookings</h2>
+    </br>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Dog</th>
+            <th scope="col">Date</th>
+            <th scope="col">Start</th>
+            <th scope="col">End</th>
+            <th scope="col">Booked By</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for slot in slots %}
+            <tr>
+                <td>{{slot.subject.dog_name}}</td>
+            </tr>
+            <tr>
+                <td>{{slot.date}}</td>
+            </tr>
+            <tr>
+                <td>{{slot.start}}</td>
+            </tr>
+            <tr>
+                <td>{{slot.end}}</td>
+            </tr>
+            <tr>
+                <td>{{slot.booker.username}}</td>
+                <td><a href="{{ url_for('delete_slot', slot=slot.id) }}">Delete Booking</a></td> 
+            </tr>
+            {% endfor %}
+        </tbody> 
     </table>
 {% endblock %}
