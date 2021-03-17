@@ -41,7 +41,7 @@
                     <div class="control-group">
                         <div class="form-group floating-label-form-group controls mb-0 pb-2">
                             <label>{{ form.age.label }}</label>
-                            {{ form.gender(size=32, class_="form-control", placeholder="Age") }}
+                            {{ form.age(size=32, class_="form-control", placeholder="Age") }}
                             {% for error in form.age.errors %}
                             <span style="color: red;">[{{ error }}]</span>
                             {% endfor %}

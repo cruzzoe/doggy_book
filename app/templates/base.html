@@ -22,11 +22,10 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="/static/css/styles.css" rel="stylesheet" />
     </head>
-    <body>
       <!-- Navigation-->
       <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
           <div class="container">
-              <a class="navbar-brand js-scroll-trigger" href="#page-top">Home</a>
+              <a class="navbar-brand js-scroll-trigger" href="{{ url_for('index') }}">Home</a>
               <button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                   Menu
                   <i class="fas fa-bars"></i>
@@ -35,8 +34,10 @@
                   <ul class="navbar-nav ml-auto">
                       <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('login') }}">Log In</a></li>
                       <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('register_dog') }}">Register Dog</a></li>
-                      <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">View Dogs</a></li>
                       <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('schedule') }}">Schedule</a></li>
+                      <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('book_dog') }}"">Book</a></li>
+                      <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('view_dogs') }}">View Dogs</a></li>
+                      <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Dog Gallery</a></li>
                       <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About</a></li>
                       <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contact</a></li>
                       <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ url_for('logout') }}">Log Out</a></li>
@@ -51,8 +52,8 @@
         <a href="{{ url_for('login') }}">Login</a>
         {% else %}
         <a href="{{ url_for('register_dog') }}/">Register Dog</a>
-        <a href="{{ url_for('view_dogs') }}">View Dogs</a>
         <a href="{{ url_for('schedule') }}">Schedule</a>
+        <a href="{{ url_for('view_dogs') }}">View Dogs</a>
         <a href="{{ url_for('logout') }}">Logout</a>
         {% endif %}
       </p>
@@ -66,28 +67,12 @@
       {% endif %}
       {% endwith %}
       {% block content %}{% endblock %}
-      <!-- Masthead-->
-      <header class="masthead bg-primary text-white text-center">
-          <div class="container d-flex align-items-center flex-column">
-              <!-- Masthead Avatar Image-->
-              <img class="masthead-avatar mb-5" src="/static/assets/img/IMG_20190120_133505_342.jpg" alt="" />
-              <!-- Masthead Heading-->
-              <h1 class="masthead-heading text-uppercase mb-0">Dog Booker</h1>
-              <!-- Icon Divider-->
-              <div class="divider-custom divider-light">
-                  <div class="divider-custom-line"></div>
-                  <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                  <div class="divider-custom-line"></div>
-              </div>
-              <!-- Masthead Subheading-->
-              <p class="masthead-subheading font-weight-light mb-0">Please register your dog or log in to view dogs to make a booking!</p>
-          </div>
-      </header>
+
       <!-- Portfolio Section-->
       <section class="page-section portfolio" id="portfolio">
           <div class="container">
               <!-- Portfolio Section Heading-->
-              <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">View Dogs</h2>
+              <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Dog Gallery</h2>
               <!-- Icon Divider-->
               <div class="divider-custom">
                   <div class="divider-custom-line"></div>
@@ -102,7 +87,7 @@
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/cabin.png" alt="" />
+                          <img class="img-fluid" src="/static/assets/img/portfolio/eddiemerlin.jpg" alt="" />
                       </div>
                   </div>
                   <!-- Portfolio Item 2-->
@@ -111,7 +96,7 @@
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/cake.png" alt="" />
+                          <img class="img-fluid" src="/static/assets/img/portfolio/oni.jpg" alt="" />
                       </div>
                   </div>
                   <!-- Portfolio Item 3-->
@@ -120,7 +105,7 @@
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/circus.png" alt="" />
+                          <img class="img-fluid" src="/static/assets/img/portfolio/coco.jpg" alt="" />
                       </div>
                   </div>
                   <!-- Portfolio Item 4-->
@@ -129,7 +114,7 @@
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/game.png" alt="" />
+                          <img class="img-fluid" src="/static/assets/img/portfolio/chloe.jpg" alt="" />
                       </div>
                   </div>
                   <!-- Portfolio Item 5-->
@@ -138,7 +123,7 @@
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/safe.png" alt="" />
+                          <img class="img-fluid" src="/static/assets/img/portfolio/loki.jpg" alt="" />
                       </div>
                   </div>
                   <!-- Portfolio Item 6-->
@@ -147,7 +132,7 @@
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/submarine.png" alt="" />
+                          <img class="img-fluid" src="/static/assets/img/portfolio/tundra.jpg" alt="" />
                       </div>
                   </div>
                 </div>
@@ -172,7 +157,7 @@
               </div>
               <!-- About Section Button, we need to change the link to Register-->
               <div class="text-center mt-4">
-                  <a class="btn btn-xl btn-outline-light" href="https://startbootstrap.com/theme/freelancer/">
+                  <a class="btn btn-xl btn-outline-light" href="{{ url_for('register') }}">
                       <i class="fas fa-download mr-2"></i>
                       Register!
                   </a>
@@ -302,7 +287,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal1Label">Log Cabin</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal1Label">Eddie and Merlin</h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -310,9 +295,9 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/cabin.png" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/eddiemerlin2.jpg" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+                                  <p class="mb-5">Eddie and Merlin are mischievous brothers who will do anything for a treat. Born in November 2019, they are still pretty young and full of energy. Eddie likes to be the bossy brother, whereas Merlin just spends his time moving from toy to toy, flipping it up and catching it. Both are really good with children and other dogs 🙂</p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
                                       Close Window
@@ -336,7 +321,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal2Label">Tasty Cake</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal2Label">Oni</h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -344,9 +329,9 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/cake.png" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/oni2.jpeg" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+                                  <p class="mb-5">I am a cute girl Cockapoo born in August 2017. I've been living in Lanyard Court for the past three years and I love living here. My favourite thing ever is fetching a ball. Despite my quirky side, I am still adorable and cuddly. Look forward to hanging out with you sometime.</p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
                                       Close Window
@@ -370,7 +355,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal3Label">Circus Tent</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal3Label">Coco</h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -378,9 +363,9 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/circus.png" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/coco2.jpg" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+                                  <p class="mb-5">Coco is a sassy 2 years old Mini Goldendoodle. She’s super cuddly, friendly and loves a snack (maybe too much)! She loves spending time with he St Paul Sq doggie friends - she’s very gentle with puppies but might need some warm up with bigger breeds as sometimes she thinks they’re out to get her even if they are not 🤪</p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
                                       Close Window
@@ -404,7 +389,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal4Label">Controller</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal4Label">Chloe</h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -412,9 +397,9 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/game.png" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/chloe2.jpg" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+                                  <p class="mb-5">Chloe is a little bodyguard, who also believes she's a human, so if you hear barking you'll know it's her trying to protect her human siblings. Chloe the little fluff ball likes to play with other small dogs, and sleep a lot.</p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
                                       Close Window
@@ -438,7 +423,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal5Label">Locked Safe</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal5Label">Loki</h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -446,9 +431,9 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/safe.png" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/loki2.jpg" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+                                  <p class="mb-5">Loki is recently recovered from Parvo so is a little behind schedule; but once he can come out on March 27th he is ready for lots of fun! He is very high energy (occasionally a little mischievous) and has not yet got round to meeting other pups. He’s excited for his first steps and loves playing!</p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
                                       Close Window
@@ -472,7 +457,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal6Label">Submarine</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal6Label">Tundra</h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -480,9 +465,9 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/submarine.png" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/tundra2.jpg" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+                                  <p class="mb-5">Hello fellow doggo owners, I am Tundra, a pomsky pupper born on the 28/11/20. I live with my parents, Miriam and Conor in Lanyard Court and am very keen to make new friends both hooman and doggo! I am very confident for my age and love to play with other dogs even those much bigger than me! I also love to chew and am very food motivated (when we are out on walks my mum calls me "the hoover"). I am quite attached to my mum and dad so it would be good for me to build trust with others on my own but also would love to have play dates at my place! Can't wait to meet you all x</p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
                                       Close Window
