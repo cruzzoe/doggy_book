@@ -61,12 +61,34 @@ def register_dog():
     form = RegistrationDogForm()
     if form.validate_on_submit():
         user_id = current_user
-        dog = Dog(dog_name=form.dog_name.data, gender=form.gender.data, age=form.age.data, owner=user_id)
+        dog = Dog(dog_name=form.dog_name.data, gender=form.gender.data, info=form.info.data, age=form.age.data, owner=user_id)
         db.session.add(dog)
         db.session.commit()
         flash('Congratulations, you\'re dog is now on the site!')
         return redirect(url_for('index'))
     return render_template('register_dog.html', title='Register', form=form)
+
+@app.route('/edit_dog/', methods=['GET', 'POST'])
+@login_required
+def edit_dog():
+    """Submit your dog to the site"""
+    user_id = current_user
+    dog = Dog.query.filter_by(owner=user_id).first()
+    form = RegistrationDogForm()
+    if form.validate_on_submit():
+        user_id = current_user
+        # dog = Dog(dog_name=form.dog_name.data, gender=form.gender.data, info=form.info.data, age=form.age.data, owner=user_id)
+        dog.dog_name = form.dog_name.data
+        db.session.commit()
+        flash('Dog Updated')
+        return redirect(url_for('index'))
+    
+    elif request.method == 'GET':
+        form.dog_name.data = dog.dog_name
+        form.gender.data = dog.gender
+        form.info.data = dog.info
+        form.age.data = dog.age
+    return render_template('edit_dog.html', title='Edit Dogs', form=form)
 
 @app.route('/view_dogs')
 @login_required
