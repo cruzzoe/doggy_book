@@ -17,9 +17,9 @@
     <h3><a href="{{ url_for('new_slot') }}">Add Slot</a></h3>
     <h3><a href="{{ url_for('edit_dog') }}">Edit Dog</a></h3>
     </br>
-    <h2>My Available Slots</h2>
+    <h4>My Available Slots</h4>
     {% for dog in dogs %}
-        <h3>{{ dog.dog_name}}</h1>
+        <h4>{{ dog.dog_name}}</h4>
         <table class="table table-hover">
             <thead>
             <tr>
