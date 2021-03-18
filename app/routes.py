@@ -6,6 +6,8 @@ from app.models import User, Dog, Slot
 from werkzeug.urls import url_parse
 from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm
 from app import db
+from app.forms import ResetPasswordForm, ResetPasswordRequestForm
+from app.email import send_password_reset_email
 
 # BOOKING STATUS
 BOOKED = 'BOOKED'
@@ -67,7 +69,7 @@ def register_dog():
         db.session.add(dog)
         db.session.commit()
         flash('Congratulations, you\'re dog is now on the site!')
-        return redirect(url_for('index'))
+        return redirect(url_for('view_schedule'))
     return render_template('register_dog.html', title='Register', form=form)
 
 @app.route('/edit_dog/', methods=['GET', 'POST'])
@@ -195,3 +197,34 @@ def bookings():
     """View user bookings made for others dogs"""
     slots = Slot.query.filter_by(booking_user=current_user.id).all()
     return render_template('bookings.html', title='View slots', slots=slots)
+
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    """Serves the form to request password reset"""
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_password_reset_email(user)
+        flash('Check your email for the instructions to reset your password')
+        return redirect(url_for('login'))
+    return render_template('reset_password_request.html',
+                           title='Reset Password', form=form)
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """Client submits token requesting password reset"""
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Your password has been reset.')
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', form=form)
