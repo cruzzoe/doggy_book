@@ -12,7 +12,7 @@
             <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
             <div class="divider-custom-line"></div>
         </div>
-            <h2>Enter your dogs availability</h2>
+            <h3>Enter your dog's availability</h3>
             <form action="" method="post">
                 {{ form.hidden_tag() }}
                 <p>
@@ -21,21 +21,21 @@
                 </p>
                 <p>
                     {{ form.date.label }}<br>
-                    {{ form.date(size=4) }}<br>
+                    {{ form.date(size=2) }}<br>
                     {% for error in form.date.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </p>
                 <p>
                     {{ form.start.label }}<br>
-                    {{ form.start(size=3) }}<br>
+                    {{ form.start(size=2) }}<br>
                     {% for error in form.start.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </p>
                 <p>
                     {{ form.end.label }}<br>
-                    {{ form.end(size=3) }}<br>
+                    {{ form.end(size=2) }}<br>
                     {% for error in form.end.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
