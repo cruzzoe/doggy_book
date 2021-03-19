@@ -6,6 +6,8 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from time import time
 import jwt
 
+from app.enums import BOOKED, FREE
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -55,7 +57,7 @@ class Dog(db.Model):
     @hybrid_property
     def free_slots(self):
         # TODO - bug here. Doesn't respect times of slot when calculating free slot.
-        slots = [x for x in self.slots.all() if x.status is None and datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.utcnow().date()]
+        slots = [x for x in self.slots.all() if x.status is not BOOKED and datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.utcnow().date()]
         return slots
 
     def __repr__(self):

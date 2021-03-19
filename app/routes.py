@@ -7,11 +7,9 @@ from werkzeug.urls import url_parse
 from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm
 from app import db
 from app.forms import ResetPasswordForm, ResetPasswordRequestForm
-from app.email import send_password_reset_email
+from app.email import send_password_reset_email, send_new_booking_email
+from app.enums import BOOKED, FREE
 
-# BOOKING STATUS
-BOOKED = 'BOOKED'
-FREE = 'FREE'
 
 @app.route('/')
 @app.route('/index')
@@ -132,7 +130,7 @@ def book_slot():
 @app.route('/confirmed')
 @login_required
 def confirmed():
-    flash('You\'r booking is confirmed! A text msg has been sent to both parties.')
+    flash('You\'r booking is confirmed! An email has been sent to both parties.')
     slot = request.args.get('slot')
     # import pdb; pdb.set_trace()
     slot = Slot.query.filter_by(id=slot).first()
@@ -140,6 +138,7 @@ def confirmed():
     slot.status = BOOKED
     db.session.add(slot)
     db.session.commit()
+    # send_new_booking_email(slot)
     return  redirect(url_for('bookings'))
 
 @app.route('/cancel_slot')
@@ -149,10 +148,11 @@ def cancel_slot():
     slot = request.args.get('slot')
     slot = Slot.query.filter_by(id=slot).first()
     slot.status = FREE
+    slot.booker = None
     db.session.commit()
     # TODO Deb - doesn't display flash msg.
     flash('Slot status cleared')
-    return redirect(url_for('view_schedule'))
+    return redirect(url_for('bookings'))
 
 @app.route('/delete_slot')
 @login_required
@@ -196,6 +196,7 @@ def view_schedule():
 def bookings():
     """View user bookings made for others dogs"""
     slots = Slot.query.filter_by(booking_user=current_user.id).all()
+    slots = [x for x in slots if x.status == BOOKED]
     return render_template('bookings.html', title='View slots', slots=slots)
 
 @app.route('/reset_password_request', methods=['GET', 'POST'])
