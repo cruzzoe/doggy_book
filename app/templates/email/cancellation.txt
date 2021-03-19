@@ -1,6 +1,6 @@
 Dear {{ slot.booker.first_name }} {{ slot.booker.last_name }} & {{ slot.subject.owner.first_name }} {{ slot.subject.owner.last_name }},
 
-The booking below has been cancelled. Cancellation requested by: {{ slot.booker.first_name }} {{ slot.booker.first_name }}
+The booking below has been cancelled. Cancellation requested by: {{ slot.booker.first_name }} {{ slot.booker.last_name }}
 You have a new booking for {{ slot.subject.dog_name }}
 
 Date: {{ slot.date }}
