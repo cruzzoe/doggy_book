@@ -45,3 +45,4 @@ if not app.debug:
 
     app.logger.setLevel(logging.INFO)
     app.logger.info('Dog Booker Flask startup')
+    app.logger.info(app.config['MAIL_USE_TLS'])
