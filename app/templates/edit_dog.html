@@ -12,7 +12,7 @@
             <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
             <div class="divider-custom-line"></div>
         </div>
-        <h2>Enter your dog's details</h2>
+        <h3>Enter your dog's details</h3>
         
         <form action="" method="post">
             {{ form.hidden_tag() }}
@@ -39,7 +39,7 @@
             </p>
             <p>
                 {{ form.age.label }}<br>
-                {{ form.age(size=4) }}<br>
+                {{ form.age(size=2) }}<br>
                 {% for error in form.age.errors %}
                 <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}

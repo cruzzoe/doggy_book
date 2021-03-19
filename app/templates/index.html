@@ -3,7 +3,7 @@
 {% block content %}
 <!-- Once logged in, this page will display to welcome users-->
 <!-- Masthead-->
-<section class="page-section" id="home"></section>
+<section class="page-section" id="page-top">
         <header class="masthead bg-primary text-white text-center">
             <div class="container d-flex align-items-center flex-column">
             <!-- Masthead Avatar Image-->
@@ -23,9 +23,12 @@
             </br>
                 <body>
                     <h4>Welcome to Dog Booker, {{ current_user.username }}!</h4>
-                    <p>Please go to My Dog to resigter your dog(s) and add/view available slots. You can also go to New Booking to make a booking.</p>
+                    <p class="lead">
+                        Please go to <u>My Dog</u> to resigter your dog(s) and add/view your available slots. You can also go to <u>New Booking</u> to book your neighbour's dog.
+                    </p>
                 </body>
             </p>
-        </div>
-    </header>
+            </div>
+        </header>
+    </section>
 {% endblock %}
