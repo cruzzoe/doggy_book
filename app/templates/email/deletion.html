@@ -1,0 +1,11 @@
+<p>Dear {{ slot.booker.first_name }} {{ slot.booker.last_name}} & {{ slot.subject.owner.first_name }} {{ slot.subject.owner.last_name}},</p>
+<p>
+    The booking below has been cancelled. Cancellation requested by: {{ slot.subject.owner.first_name }} {{ slot.subject.owner.last_name }}
+    <p>Dog: {{ slot.subject.dog_name }}</p>
+    <p>Date: {{ slot.date }}</p>
+    <p>Start time: {{ slot.start }}</p>
+    <p>End time: {{ slot.end }}</p>
+</p>
+
+<p>Sincerely,</p>
+<p>The Doggy Booker Team</p>

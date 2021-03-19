@@ -7,7 +7,7 @@ from werkzeug.urls import url_parse
 from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm
 from app import db
 from app.forms import ResetPasswordForm, ResetPasswordRequestForm
-from app.email import send_password_reset_email, send_new_booking_email
+from app.email import send_password_reset_email, send_new_booking_email, send_cancellation_email, send_deletion_email
 from app.enums import BOOKED, FREE
 
 
@@ -147,6 +147,7 @@ def cancel_slot():
     """Cancel booking and make available again for other users to book."""
     slot = request.args.get('slot')
     slot = Slot.query.filter_by(id=slot).first()
+    send_cancellation_email(slot)
     slot.status = FREE
     slot.booker = None
     db.session.commit()
@@ -159,6 +160,10 @@ def cancel_slot():
 def delete_slot():
     slot = request.args.get('slot')
     slot = Slot.query.filter_by(id=slot).first()
+
+    if slot.booker is not None:
+        send_deletion_email(slot)
+
     db.session.delete(slot)
     db.session.commit()
     flash('Slot deleted')

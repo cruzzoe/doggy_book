@@ -1,10 +1,9 @@
 <p>Dear {{ slot.booker.first_name }} {{ slot.booker.last_name}} & {{ slot.subject.owner.first_name }} {{ slot.subject.owner.last_name}},</p>
-<p>
-    You have a new booking!
-    Date: {{ slot.date }}
-    Start time: {{ slot.start }}
-    End time: {{ slot.end }}
-</p>
+
+<p>You have a new booking for {{ slot.subject.dog_name }}</p>
+<p>Date: {{ slot.date }}</p>
+<p>Start time: {{ slot.start }}</p>
+<p>End time: {{ slot.end }}</p>
 
 <p>Sincerely,</p>
 <p>The Doggy Booker Team</p>
