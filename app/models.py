@@ -15,6 +15,8 @@ def load_user(id):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
+    first_name = db.Column(db.String(64), index=True)
+    last_name = db.Column(db.String(64), index=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     dogs = db.relationship('Dog', backref='owner', lazy='dynamic')
@@ -45,7 +47,7 @@ class User(UserMixin, db.Model):
 
 class Dog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    dog_name = db.Column(db.String(140))
+    dog_name = db.Column(db.String(140), unique=True)
     age = db.Column(db.String(140))
     info = db.Column(db.String(140))
     gender = db.Column(db.String(140))
@@ -57,7 +59,7 @@ class Dog(db.Model):
     @hybrid_property
     def free_slots(self):
         # TODO - bug here. Doesn't respect times of slot when calculating free slot.
-        slots = [x for x in self.slots.all() if x.status is not BOOKED and datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.utcnow().date()]
+        slots = [x for x in self.slots.all() if x.status != BOOKED and datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.utcnow().date()]
         return slots
 
     def __repr__(self):
