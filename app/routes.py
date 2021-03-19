@@ -132,13 +132,12 @@ def book_slot():
 def confirmed():
     flash('You\'r booking is confirmed! An email has been sent to both parties.')
     slot = request.args.get('slot')
-    # import pdb; pdb.set_trace()
     slot = Slot.query.filter_by(id=slot).first()
     slot.booker = current_user
     slot.status = BOOKED
     db.session.add(slot)
     db.session.commit()
-    # send_new_booking_email(slot)
+    send_new_booking_email(slot)
     return  redirect(url_for('bookings'))
 
 @app.route('/cancel_slot')

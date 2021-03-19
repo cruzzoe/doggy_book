@@ -18,3 +18,12 @@ def send_password_reset_email(user):
                                          user=user, token=token),
                html_body=render_template('email/reset_password.html',
                                          user=user, token=token))
+
+def send_new_booking_email(slot):
+    send_email('New booking!',
+               sender=app.config['ADMINS'][0],
+               recipients=[slot.subject.owner.email, slot.booker.email],
+               text_body=render_template('email/new_booking.txt',
+                                         slot=slot),
+               html_body=render_template('email/new_booking.html',
+                                         slot=slot))

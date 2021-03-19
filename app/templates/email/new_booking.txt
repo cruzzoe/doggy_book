@@ -1,0 +1,11 @@
+Dear {{ slot.booker.first_name }} {{ slot.booker.last_name }} & {{ slot.subject.owner.first_name }} {{ slot.subject.owner.last_name }},
+
+You have a new booking for {{ slot.subject.dog_name }}
+
+Date: {{ slot.date }}
+Start time: {{ slot.start }}
+End time: {{ slot.end }}
+
+Sincerely,
+
+The Doggy Booker Team
