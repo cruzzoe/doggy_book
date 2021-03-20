@@ -50,7 +50,7 @@ class Dog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     dog_name = db.Column(db.String(140), unique=True)
     dob = db.Column(db.Date)
-    info = db.Column(db.String(140))
+    info = db.Column(db.Text())
     gender = db.Column(db.String(140))
     breed = db.Column(db.String(140))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
