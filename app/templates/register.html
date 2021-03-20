@@ -50,6 +50,17 @@
                         </div>
                     </div>
 
+                    {{ form.hidden_tag() }}
+                    <div class="control-group">
+                        <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                            <label>{{ form.phone.label }}</label>
+                            {{ form.phone(size=32, class_="form-control", placeholder="Phone Number") }}
+                            {% for error in form.phone.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
                     <div class="control-group">
                         <div class="form-group floating-label-form-group controls mb-0 pb-2">
                             <label>{{ form.email.label }}</label>
