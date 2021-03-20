@@ -48,7 +48,7 @@ class User(UserMixin, db.Model):
 class Dog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     dog_name = db.Column(db.String(140), unique=True)
-    age = db.Column(db.String(140))
+    dob = db.Column(db.Date)
     info = db.Column(db.String(140))
     gender = db.Column(db.String(140))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -61,6 +61,10 @@ class Dog(db.Model):
         # TODO - bug here. Doesn't respect times of slot when calculating free slot.
         slots = [x for x in self.slots.all() if x.status != BOOKED and datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.utcnow().date()]
         return slots
+
+    @hybrid_property
+    def age(self):
+        return self.dob.strftime("%Y-%m-%d")
 
     def __repr__(self):
         return '<Dog {}>'.format(self.dog_name)

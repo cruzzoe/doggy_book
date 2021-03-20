@@ -40,9 +40,9 @@
                 </p>
 
                 <p>
-                    {{ form.age.label }}</br>
-                    {{ form.age(size=2)}}</br>
-                    {% for error in form.age.errors %}
+                    {{ form.dob.label }}</br>
+                    {{ form.dob(size=11)}}</br>
+                    {% for error in form.dob.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </p>

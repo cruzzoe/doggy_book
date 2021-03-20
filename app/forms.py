@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField, DateField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import User, Dog
 import datetime
@@ -12,8 +12,8 @@ class LoginForm(FlaskForm):
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
-    first_name = StringField('Username', validators=[DataRequired()])
-    last_name = StringField('Username', validators=[DataRequired()])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
@@ -34,7 +34,7 @@ class RegistrationDogForm(FlaskForm):
     dog_name = StringField('Dog Name', validators=[DataRequired()])
     gender = SelectField('Gender', choices=['Male', 'Female'], validate_choice=True)
     info = TextAreaField('Essential Info', validators=[Length(min=0, max=140)])
-    age = SelectField('Age', choices=list(range(1, 21)), validate_choice=True)
+    dob = DateField('Date of Birth', format='%Y-%m-%d', default=datetime.date(2019,1,1))
     submit = SubmitField('Submit')
 
     def validate_dog_name(self, dog_name):
@@ -54,9 +54,9 @@ class ScheduleForm(FlaskForm):
     choices = [str(x) + ':00' for x in choices]
     # for delta in range(0, 15):
     #     choices.append(now + datetime.timedelta(days=delta))
-    start = SelectField('Start time (24hr)', choices=choices, validate_choice=True)
+    start = SelectField('Start time (24hr)', choices=choices, default='9:00', validate_choice=True)
     # end = StringField('End time (24hr)', validators=[DataRequired()])
-    end = SelectField('End time (24hr)', choices=choices, validate_choice=True)
+    end = SelectField('End time (24hr)', choices=choices, validate_choice=True, default='10:00')
     submit = SubmitField('Submit')
 
 class ResetPasswordRequestForm(FlaskForm):

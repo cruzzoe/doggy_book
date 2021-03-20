@@ -64,7 +64,7 @@ def register_dog():
     form = RegistrationDogForm()
     if form.validate_on_submit():
         user_id = current_user
-        dog = Dog(dog_name=form.dog_name.data, gender=form.gender.data, info=form.info.data, age=form.age.data, owner=user_id)
+        dog = Dog(dog_name=form.dog_name.data, gender=form.gender.data, info=form.info.data, dob=form.dob.data, owner=user_id)
         db.session.add(dog)
         db.session.commit()
         flash('Congratulations, you\'re dog is now on the site!')
@@ -87,7 +87,7 @@ def edit_dog():
         dog.dog_name = form.dog_name.data
         dog.gender = form.gender.data
         dog.info = form.info.data
-        dog.age = form.age.data
+        dog.dob = form.dob.data
         db.session.commit()
         flash('Dog Updated')
         return redirect(url_for('view_schedule'))
@@ -96,7 +96,7 @@ def edit_dog():
         form.dog_name.data = dog.dog_name
         form.gender.data = dog.gender
         form.info.data = dog.info
-        form.age.data = dog.age
+        form.dogb.data = dog.dob
     return render_template('edit_dog.html', title='Edit Dogs', form=form)
 
 @app.route('/view_dogs')
