@@ -1,6 +1,6 @@
 from app import app
 import datetime
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory
 from flask_login import login_user, logout_user, current_user, login_required
 from app.models import User, Dog, Slot
 from werkzeug.urls import url_parse
@@ -9,6 +9,12 @@ from app import db
 from app.forms import ResetPasswordForm, ResetPasswordRequestForm
 from app.email import send_password_reset_email, send_new_booking_email, send_cancellation_email, send_deletion_email
 from app.enums import BOOKED, FREE
+import os
+import imghdr
+
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
+app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.jpeg']
+app.config['UPLOAD_PATH'] = 'uploads_dir'
 
 
 @app.route('/')
@@ -97,7 +103,7 @@ def edit_dog():
         form.dog_name.data = dog.dog_name
         form.gender.data = dog.gender
         form.info.data = dog.info
-        form.dogb.data = dog.dob
+        form.dob.data = dog.dob
     return render_template('edit_dog.html', title='Edit Dogs', form=form)
 
 @app.route('/view_dogs')
@@ -118,7 +124,14 @@ def book_dog():
     slots = dog.slots.all()
     slots = [x for x in slots if x.status != BOOKED]
     slots = [x for x in slots if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.datetime.utcnow().date()]
-    return render_template('book_dog.html', title='Slot booked', dog=dog, slots=slots)
+
+    # check if picture exists
+    path = os.path.join('app', app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
+    if os.path.exists(path):
+        picture = str(dog.id) + '.jpeg'
+    else:
+        picture = None
+    return render_template('book_dog.html', title='Slot booked', dog=dog, slots=slots, picture=picture)
 
 @app.route('/book_slot')
 @login_required
@@ -234,3 +247,30 @@ def reset_password(token):
         flash('Your password has been reset.')
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
+
+def get_file_extension(stream):
+    header = stream.read(512)  # 512 bytes should be enough for a header check
+    stream.seek(0)  # reset stream pointer
+    file_format = imghdr.what(None, header)
+    if not file_format:
+        return None
+    return '.' + (file_format if file_format != 'jpeg' else 'jpg')
+
+@app.route('/upload_photo', methods=['GET', 'POST'])
+def upload_photo():
+    if request.method == 'POST':
+        uploaded_file = request.files['file']
+        user_id = current_user
+        dog = Dog.query.filter_by(owner=user_id).first()
+        filename = str(dog.id)
+        file_ext = get_file_extension(uploaded_file.stream)
+        if file_ext not in app.config['UPLOAD_EXTENSIONS']:
+            abort(400)
+        uploaded_file.save(os.path.join('app', app.config['UPLOAD_PATH'], filename + '.jpeg'))
+        return redirect(url_for('view_schedule'))
+    else:
+        return render_template('upload_photo.html')
+
+@app.route('/uploads/<filename>')
+def upload(filename):
+    return send_from_directory(app.config['UPLOAD_PATH'], filename)

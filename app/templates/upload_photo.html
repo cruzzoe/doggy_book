@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-section" id="upload_photo">
+    <div class="container"> 
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Photo Upload</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <h5>Please ensure your file sizes are below 800KB so we don't become broke with server costs :) </h5>
+        <form method="POST" action="" enctype="multipart/form-data">
+          <p><input type="file" name="file"></p>
+          <p><input type="submit" value="Submit"></p>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField, DateField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField, DateField, IntegerField, FileField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import User, Dog
 import datetime
@@ -42,7 +42,7 @@ class RegistrationDogForm(FlaskForm):
         dog_name = Dog.query.filter_by(dog_name=dog_name.data).first()
         if dog_name is not None:
             raise ValidationError('This dog name is already taken!')
-
+            
 class ScheduleForm(FlaskForm):
     dog = SelectField('Selected Dog: ', validate_choice=True)
     now = datetime.date.today()

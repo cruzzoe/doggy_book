@@ -17,6 +17,9 @@
     </br>
     <h4>Available slots for: {{ dog.dog_name }}</h4>
     <p>Essential Info: {{ dog.info }}</p>
+    {% if picture %}
+    <img src="{{ url_for('upload', filename=picture) }}" style="width: 500px">
+    {% endif %}
     <h4>Please select a slot from the list below.</h4>
         <title>{{ title }} - Dog Booker</title>
         <table class="table table-hover">
