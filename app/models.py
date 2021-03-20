@@ -52,6 +52,7 @@ class Dog(db.Model):
     dob = db.Column(db.Date)
     info = db.Column(db.String(140))
     gender = db.Column(db.String(140))
+    breed = db.Column(db.String(140))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 

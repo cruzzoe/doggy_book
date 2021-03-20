@@ -44,4 +44,8 @@
             {% endfor %}
         </table>
     {% endfor %}
+
+    {% if picture %}
+    <img src="{{ url_for('upload', filename=picture) }}" style="width: 500px">
+    {% endif %}
 {% endblock %}

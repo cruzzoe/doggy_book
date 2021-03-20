@@ -32,6 +32,14 @@
                 </p>
 
                 <p>
+                    {{ form.breed.label }}</br>
+                    {{ form.breed(size=20)}}</br>
+                    {% for error in form.breed.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+
+                <p>
                     {{ form.info.label }}</br>
                     {{ form.info(size=100)}}</br>
                     {% for error in form.info.errors %}

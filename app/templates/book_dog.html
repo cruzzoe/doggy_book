@@ -16,6 +16,9 @@
     <!--New booking section starts here-->
     </br>
     <h4>Available slots for: {{ dog.dog_name }}</h4>
+    <p>Breed: {{ dog.breed }}</p>
+    <p>Gender: {{ dog.gender }}</p>
+    <p>Age: {{ dog.age }}</p>
     <p>Essential Info: {{ dog.info }}</p>
     {% if picture %}
     <img src="{{ url_for('upload', filename=picture) }}" style="width: 500px">

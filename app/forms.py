@@ -34,6 +34,7 @@ class RegistrationForm(FlaskForm):
 class RegistrationDogForm(FlaskForm):
     dog_name = StringField('Dog Name', validators=[DataRequired()])
     gender = SelectField('Gender', choices=['Male', 'Female'], validate_choice=True)
+    breed = StringField('Breed', validators=[DataRequired()])
     info = TextAreaField('Essential Info', validators=[Length(min=0, max=140)])
     dob = DateField('Date of Birth', format='%d-%m-%Y', default=datetime.date(2019,12,1))
     submit = SubmitField('Submit')
@@ -42,7 +43,15 @@ class RegistrationDogForm(FlaskForm):
         dog_name = Dog.query.filter_by(dog_name=dog_name.data).first()
         if dog_name is not None:
             raise ValidationError('This dog name is already taken!')
-            
+
+class EditDogForm(FlaskForm):
+    dog_name = StringField('Dog Name', validators=[DataRequired()])
+    gender = SelectField('Gender', choices=['Male', 'Female'], validate_choice=True)
+    breed = StringField('Breed', validators=[DataRequired()])
+    info = TextAreaField('Essential Info', validators=[Length(min=0, max=140)])
+    dob = DateField('Date of Birth', format='%d-%m-%Y', default=datetime.date(2019,12,1))
+    submit = SubmitField('Submit')
+
 class ScheduleForm(FlaskForm):
     dog = SelectField('Selected Dog: ', validate_choice=True)
     now = datetime.date.today()

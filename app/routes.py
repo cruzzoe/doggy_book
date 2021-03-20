@@ -4,7 +4,7 @@ from flask import render_template, flash, redirect, url_for, request, abort, sen
 from flask_login import login_user, logout_user, current_user, login_required
 from app.models import User, Dog, Slot
 from werkzeug.urls import url_parse
-from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm
+from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm, EditDogForm
 from app import db
 from app.forms import ResetPasswordForm, ResetPasswordRequestForm
 from app.email import send_password_reset_email, send_new_booking_email, send_cancellation_email, send_deletion_email
@@ -71,7 +71,7 @@ def register_dog():
     form = RegistrationDogForm()
     if form.validate_on_submit():
         user_id = current_user
-        dog = Dog(dog_name=form.dog_name.data, gender=form.gender.data, info=form.info.data, dob=form.dob.data, owner=user_id)
+        dog = Dog(dog_name=form.dog_name.data, gender=form.gender.data, breed=form.breed.data, info=form.info.data, dob=form.dob.data, owner=user_id)
         db.session.add(dog)
         db.session.commit()
         flash('Congratulations, you\'re dog is now on the site!')
@@ -88,11 +88,12 @@ def edit_dog():
     if not dog:
         return redirect(url_for('register_dog'))
 
-    form = RegistrationDogForm()
+    form = EditDogForm()
     if form.validate_on_submit():
         user_id = current_user
         dog.dog_name = form.dog_name.data
         dog.gender = form.gender.data
+        dog.breed = form.breed.data
         dog.info = form.info.data
         dog.dob = form.dob.data
         db.session.commit()
@@ -102,6 +103,7 @@ def edit_dog():
     elif request.method == 'GET':
         form.dog_name.data = dog.dog_name
         form.gender.data = dog.gender
+        form.breed.data = dog.breed
         form.info.data = dog.info
         form.dob.data = dog.dob
     return render_template('edit_dog.html', title='Edit Dogs', form=form)
@@ -207,7 +209,15 @@ def view_schedule():
     """View slots existing for your dog"""
     user_id = current_user.id
     dogs = Dog.query.filter_by(user_id=user_id).all()
-    return render_template('schedule.html', title='View slots', dogs=dogs)
+    
+    picture = None
+    # check if picture exists
+    for dog in dogs:
+        path = os.path.join('app', app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
+        if os.path.exists(path):
+            picture = str(dog.id) + '.jpeg'
+
+    return render_template('schedule.html', title='View slots', dogs=dogs, picture=picture)
 
 @app.route('/bookings')
 @login_required
