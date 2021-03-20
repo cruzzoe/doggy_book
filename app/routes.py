@@ -54,7 +54,7 @@ def register():
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         login_user(user)
-        return redirect(url_for('register_dog'))
+        return redirect(url_for('index'))
     return render_template('register.html', title='Register', form=form)
 
 
