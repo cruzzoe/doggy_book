@@ -35,7 +35,7 @@ class RegistrationDogForm(FlaskForm):
     dog_name = StringField('Dog Name', validators=[DataRequired()])
     gender = SelectField('Gender', choices=['Male', 'Female'], validate_choice=True)
     info = TextAreaField('Essential Info', validators=[Length(min=0, max=140)])
-    dob = DateField('Date of Birth', format='%Y-%m-%d', default=datetime.date(2019,1,1))
+    dob = DateField('Date of Birth', format='%d-%m-%Y', default=datetime.date(2019,12,1))
     submit = SubmitField('Submit')
 
     def validate_dog_name(self, dog_name):
