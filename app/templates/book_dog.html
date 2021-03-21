@@ -15,7 +15,8 @@
         <!--<h2>Make new bookings to look after your neighbours' dogs</h2>-->
     <!--New booking section starts here-->
     </br>
-    <h4>Available slots for: {{ dog.dog_name }}</h4>
+    <h4>Available Slots For: {{ dog.dog_name }}</h4>
+    <p>Dog Parent(s): {{ dog.owner.first_name }}</p>
     <p>Breed: {{ dog.breed }}</p>
     <p>Gender: {{ dog.gender }}</p>
     <p>Age: {{ dog.age }}</p>
