@@ -15,6 +15,7 @@ import imghdr
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.jpeg']
 app.config['UPLOAD_PATH'] = 'uploads_dir'
+app.config['CALENDAR_PATH'] = 'calendar_path'
 
 
 @app.route('/')
@@ -287,4 +288,15 @@ def upload_photo():
 def upload(filename):
     return send_from_directory(app.config['UPLOAD_PATH'], filename)
 
-
+# @app.route('/dog/<dog_id>')
+# @login_required
+# def show_dog(dog_id):
+#     dog = Dog.query.filter_by(id=dog_id).first()
+    
+#     # check if picture exists
+#     path = os.path.join('app', app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
+#     if os.path.exists(path):
+#         picture = str(dog.id) + '.jpeg'
+#     else:
+#         picture = None
+#     return render_template('dog.html', dog=dog, picture=picture)
