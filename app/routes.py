@@ -196,7 +196,7 @@ def new_slot():
     if form.validate_on_submit():
         user_id = current_user
         subject = Dog.query.filter_by(dog_name=form.dog.data).first()
-        slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject)
+        slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject, status=FREE)
         db.session.add(slot)
         db.session.commit()
         flash('Schedule amended')
