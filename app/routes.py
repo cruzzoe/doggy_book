@@ -267,6 +267,7 @@ def get_file_extension(stream):
     return '.' + (file_format if file_format != 'jpeg' else 'jpg')
 
 @app.route('/upload_photo', methods=['GET', 'POST'])
+@login_required
 def upload_photo():
     if request.method == 'POST':
         uploaded_file = request.files['file']
@@ -282,5 +283,8 @@ def upload_photo():
         return render_template('upload_photo.html')
 
 @app.route('/uploads/<filename>')
+@login_required
 def upload(filename):
     return send_from_directory(app.config['UPLOAD_PATH'], filename)
+
+
