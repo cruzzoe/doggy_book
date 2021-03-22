@@ -81,6 +81,7 @@ class Slot(db.Model):
     dog_id = db.Column(db.Integer, db.ForeignKey('dog.id'))
     booking_user = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    comments = db.Column(db.Text())
 
     def __repr__(self):
         return '<Slot {}>'.format(str(self.id))

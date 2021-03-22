@@ -4,9 +4,8 @@ from flask import render_template, flash, redirect, url_for, request, abort, sen
 from flask_login import login_user, logout_user, current_user, login_required
 from app.models import User, Dog, Slot
 from werkzeug.urls import url_parse
-from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm, EditDogForm
+from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm, EditDogForm, ResetPasswordForm, ResetPasswordRequestForm, BookingForm
 from app import db
-from app.forms import ResetPasswordForm, ResetPasswordRequestForm
 from app.email_utils import send_password_reset_email, send_new_booking_email, send_cancellation_email, send_deletion_email
 from app.enums import BOOKED, FREE
 import os
@@ -138,13 +137,22 @@ def book_dog():
         picture = None
     return render_template('book_dog.html', title='Slot booked', dog=dog, slots=slots, picture=picture)
 
-@app.route('/book_slot')
+@app.route('/book_slot', methods=['GET', 'POST'])
 @login_required
 def book_slot():
+    form = BookingForm()
+
     slot = request.args.get('slot')
     slot = Slot.query.filter_by(id=slot).first()
     dog_name = slot.subject.dog_name
-    return render_template('book_slot.html', title='Slot booked', slot=slot, dog_name=dog_name)
+
+    if form.validate_on_submit():
+        user_id = current_user
+        slot.comments = form.comments.data
+        db.session.commit()
+        return redirect(url_for('confirmed', slot=slot.id))
+
+    return render_template('book_slot.html', title='Slot booked', slot=slot, dog_name=dog_name, form=form)
 
 @app.route('/confirmed')
 @login_required
@@ -167,6 +175,7 @@ def cancel_slot():
     slot = Slot.query.filter_by(id=slot).first()
     send_cancellation_email(slot)
     slot.status = FREE
+    slot.comments = ''
     slot.booker = None
     db.session.commit()
     # TODO Deb - doesn't display flash msg.
@@ -199,7 +208,7 @@ def new_slot():
     if form.validate_on_submit():
         user_id = current_user
         subject = Dog.query.filter_by(dog_name=form.dog.data).first()
-        slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject, status=FREE)
+        slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject, status=FREE, comments='')
         db.session.add(slot)
         db.session.commit()
         flash('Schedule amended')

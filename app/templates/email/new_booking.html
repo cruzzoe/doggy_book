@@ -5,6 +5,10 @@
 <p>Start time: {{ slot.start }}</p>
 <p>End time: {{ slot.end }}</p>
 
+{% if slot.comments %}
+<p>Comments from {{ slot.booker.first_name }}: "{{ slot.comments }}"</p>
+{% endif %}
+
 <p>Sincerely,</p>
 <p>The Doggy Booker Team</p>
 
