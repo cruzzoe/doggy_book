@@ -61,6 +61,7 @@ class Dog(db.Model):
     @hybrid_property
     def free_slots(self):
         # TODO - bug here. Doesn't respect times of slot when calculating free slot.
+        # TODO should return an int. Not a list of free slots.
         slots = [x for x in self.slots.all() if x.status != BOOKED and datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.utcnow().date()]
         return slots
 

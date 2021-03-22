@@ -117,6 +117,7 @@ def view_dogs():
     for dog in dogs:
         if dog.owner != current_user:
             res.append(dog)
+    res.sort(key=lambda x: len(x.free_slots), reverse=True)
     return render_template('view_dogs.html', title='View Dogs', dogs=res)
 
 @app.route('/book_dog')
