@@ -29,6 +29,7 @@
         <table class="table table-hover">
             <thead>
             <tr>
+                <th scope="col">Day</th>
                 <th scope="col">Date</th>
                 <th scope="col">Start Time</th>
                 <th scope="col">End Time</th>
@@ -37,6 +38,7 @@
             </thead>
             {% for slot in slots %}
             <tr>
+                <td>{{slot.day_str}}</td>
                 <td>{{slot.date}}</td>
                 <td>{{slot.start}}</td> 
                 <td>{{slot.end}}</td> 

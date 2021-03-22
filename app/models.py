@@ -84,3 +84,7 @@ class Slot(db.Model):
 
     def __repr__(self):
         return '<Slot {}>'.format(str(self.id))
+
+    @hybrid_property
+    def day_str(self):
+        return datetime.strptime(self.date, "%Y-%M-%d").date().strftime('%A')
