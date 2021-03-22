@@ -7,7 +7,7 @@ from werkzeug.urls import url_parse
 from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm, EditDogForm
 from app import db
 from app.forms import ResetPasswordForm, ResetPasswordRequestForm
-from app.email import send_password_reset_email, send_new_booking_email, send_cancellation_email, send_deletion_email
+from app.email_utils import send_password_reset_email, send_new_booking_email, send_cancellation_email, send_deletion_email
 from app.enums import BOOKED, FREE
 import os
 import imghdr
