@@ -128,6 +128,7 @@ def book_dog():
     slots = dog.slots.all()
     slots = [x for x in slots if x.status != BOOKED]
     slots = [x for x in slots if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.datetime.utcnow().date()]
+    slots.sort(key=lambda x: x.date)
 
     # check if picture exists
     path = os.path.join('app', app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')

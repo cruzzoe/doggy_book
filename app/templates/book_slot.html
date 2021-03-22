@@ -4,7 +4,7 @@
 <section class="page-section" id="bookings">
     <div class="container"> 
         <!-- Contact Section Heading-->
-        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Available Dogs</h2>
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Confirm Booking</h2>
         <!-- Icon Divider-->
         <div class="divider-custom">
             <div class="divider-custom-line"></div>
@@ -12,11 +12,11 @@
             <div class="divider-custom-line"></div>
         </div>
 
-            <h3>Please confirm your booking for: {{ dog_name }}</h3>
+            <h5>Please confirm your session with: {{ dog_name }}</h5>
             </br>
-            <h4>Details below for your booking. Please check and then click confirm to proceed.</h4>
+            <p>{{ slot.day_str }}</p>
             <p>Date: {{ slot.date }}</p>
-            <h4>Start: {{ slot.start }}</h4>
-            <h4>End: {{ slot.end }}</h4>
-            <h4><a href="{{ url_for('confirmed', slot=slot.id) }}">Click to Book!</a></h4>
+            <p>Start: {{ slot.start }}</p>
+            <p>End: {{ slot.end }}</p>
+            <h5><a href="{{ url_for('confirmed', slot=slot.id) }}">Click to Book!</a></h5>
 {% endblock %}
