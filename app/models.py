@@ -88,4 +88,4 @@ class Slot(db.Model):
 
     @hybrid_property
     def day_str(self):
-        return datetime.strptime(self.date, "%Y-%M-%d").date().strftime('%A')
+        return datetime.strptime(self.date, "%Y-%m-%d").date().strftime('%A')
