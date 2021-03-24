@@ -23,6 +23,12 @@ else:
 app.config['CALENDAR_PATH'] = 'calendar_path'
 
 
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.datetime.utcnow()
+        db.session.commit()
+
 @app.route('/')
 @app.route('/index')
 @login_required
