@@ -11,7 +11,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 class BookingForm(FlaskForm):
-    comments = TextAreaField('Booking Comments', validators=[Length(min=0, max=10000)])
+    comments = TextAreaField('Booking Comments (will be included in booking email)', validators=[Length(min=0, max=10000)])
     submit = SubmitField('Confirm Booking')
 
 class RegistrationForm(FlaskForm):

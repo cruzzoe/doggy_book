@@ -13,12 +13,14 @@
         </div>
 
             <h5>Please confirm your session with: {{ dog_name }}</h5>
-            </br>
             <p>{{ slot.day_str }}</p>
             <p>Date: {{ slot.date }}</p>
             <p>Start: {{ slot.start }}</p>
             <p>End: {{ slot.end }}</p>
 
+            <p>Once booked, please speak to {{ slot.subject.owner.first_name }} to arrange collection of {{ dog_name }} </p>
+            <strong> By clicking the button below I understand I am making a booking to collect {{ dog_name }} and look after them until the agreed time to hand them back. </strong>
+            <br></br>
             <form action="" method="post">
                 {{ form.hidden_tag() }}
                     <p>
@@ -28,7 +30,6 @@
                         <span style="color: red;">[{{ error }}]</span>
                         {% endfor %}
                     </p>
-
                     <p>
                     {{ form.submit(class_="btn btn-primary btn-xl") }}
                     </p>
