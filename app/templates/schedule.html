@@ -13,18 +13,19 @@
             <div class="divider-custom-line"></div>
         </div>
 
-    <h3><a href="{{ url_for('register_dog') }}/">Register Dog</a></h3>
-    <h3><a href="{{ url_for('new_slot') }}">Add Slot</a></h3>
-    <h3><a href="{{ url_for('edit_dog') }}">Edit Dog</a></h3>
-    <h3><a href="{{ url_for('upload_photo') }}">Upload Photo</a></h3>
+    <h6><a href="{{ url_for('register_dog') }}/">Register Dog</a></h6>
+    <h6><a href="{{ url_for('new_slot') }}">Add Slot</a></h6>
+    <h6><a href="{{ url_for('repeat_slot') }}">Repeat Slot</a></h6>
+    <h6><a href="{{ url_for('edit_dog') }}">Edit Dog</a></h6>
+    <h6><a href="{{ url_for('upload_photo') }}">Upload Photo</a></h6>
     </br>
     <h4>My Available Slots</h4>
     {% for dog in dogs %}
-        <h4>{{ dog.dog_name}}</h4>
+        <h5>{{ dog.dog_name}}</h5>
         <table class="table table-hover">
             <thead>
             <tr>
-                <th scope="col">Dog name</th>
+                <th scope="col">Day</th>
                 <th scope="col">Date</th>
                 <th scope="col">Start</th>
                 <th scope="col">End</th>
@@ -35,7 +36,7 @@
             </thead>
             {% for slot in dog.slots.all() %}
             <tr>
-                <td>{{slot.subject.dog_name}}</td>
+                <td>{{slot.day_str}}</td>
                 <td>{{slot.date}}</td> 
                 <td>{{slot.start}}</td> 
                 <td>{{slot.end}}</td> 

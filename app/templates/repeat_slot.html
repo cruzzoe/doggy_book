@@ -5,7 +5,7 @@
 <section class="page-section" id="add_slots">
     <div class="container"> 
         <!-- Contact Section Heading-->
-        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Add Available Slots</h2>
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Create Repeating Slots</h2>
         <!-- Icon Divider-->
         <div class="divider-custom">
             <div class="divider-custom-line"></div>
@@ -13,33 +13,48 @@
             <div class="divider-custom-line"></div>
         </div>
             <h3>Create a playtime slot for {{ dog }} </h3>
-            <p>A slot is a session that your dog can be booked for. The person booking the dog will then either take your dog to their house/the park depending on what is agreed.</p>
+            <ul>
+                <li>A slot is a session that your dog can be booked for. The person booking the dog will then either take your dog to their house/the park depending on what is agreed.</li>
+                </br>
+                <li>Repeat slots will occur at the same time every week for as many times as specified by the repeat field</li>
+                </br>
+            </li>
+
             <form action="" method="post">
                 {{ form.hidden_tag() }}
+
                 <p>
-                    {{ form.date.label }}<br>
-                    {{ form.date(size=4) }}<br>
-                    {% for error in form.date.errors %}
+                    {{ form.repeats.label }}</br>
+                    {{ form.repeats(size=3)}}</br>
+                    {% for error in form.repeats.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
-                </p>
+                </li>
+
+                <p>
+                    {{ form.selected_days.label }}<br>
+                    {{ form.selected_days(size=7) }}<br>
+                    {% for error in form.selected_days.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </li>
                 <p>
                     {{ form.start.label }}<br>
                     {{ form.start(size=3) }}<br>
                     {% for error in form.start.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
-                </p>
+                </li>
                 <p>
                     {{ form.end.label }}<br>
                     {{ form.end(size=3) }}<br>
                     {% for error in form.end.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
-                </p>
+                </li>
                 <p>
                     {{ form.submit(class_="btn btn-primary btn-xl") }}
-                </p>
+                </li>
                     
                 
             </form>

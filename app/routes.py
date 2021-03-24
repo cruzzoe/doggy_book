@@ -4,7 +4,7 @@ from flask import render_template, flash, redirect, url_for, request, abort, sen
 from flask_login import login_user, logout_user, current_user, login_required
 from app.models import User, Dog, Slot
 from werkzeug.urls import url_parse
-from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm, EditDogForm, ResetPasswordForm, ResetPasswordRequestForm, BookingForm
+from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm, EditDogForm, ResetPasswordForm, ResetPasswordRequestForm, BookingForm, RepeatScheduleForm
 from app import db
 from app.email_utils import send_password_reset_email, send_new_booking_email, send_cancellation_email, send_deletion_email
 from app.enums import BOOKED, FREE
@@ -214,18 +214,45 @@ def new_slot():
     """Book a new slot for dogs owned by user"""
     user_id = current_user.id
     form = ScheduleForm()
-    dogs = [dog.dog_name for dog in Dog.query.filter_by(user_id=user_id)]
-    form.dog.choices = dogs
+    dog = Dog.query.filter_by(user_id=user_id).first().dog_name
 
     if form.validate_on_submit():
         user_id = current_user
-        subject = Dog.query.filter_by(dog_name=form.dog.data).first()
+        subject = Dog.query.filter_by(dog_name=dog).first()
         slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject, status=FREE, comments='')
         db.session.add(slot)
         db.session.commit()
         flash('Schedule amended')
         return redirect(url_for('view_schedule'))
-    return render_template('new_slot.html', title='Amend your dogs availability', form=form)
+    return render_template('new_slot.html', title='Amend your dogs availability', form=form, dog=dog)
+
+@app.route('/repeat_slot', methods=['GET', 'POST'])
+@login_required
+def repeat_slot():
+    """Book a new slot for dogs owned by user"""
+    user_id = current_user.id
+    form = RepeatScheduleForm()
+    dog = Dog.query.filter_by(user_id=user_id).first().dog_name
+
+    if form.validate_on_submit():
+        user_id = current_user
+        subject = Dog.query.filter_by(dog_name=dog).first()
+        selected_day = int(form.selected_days.data)
+        repeats = form.repeats.data        
+        # Starting from the selected day below, create slots up to the number specified in Slot Repeats (up to 10)
+        dates = []
+        count = 0
+        date = datetime.date.today()
+        while count < repeats:
+            if date.weekday() == selected_day:
+                slot = Slot(date=date, start=form.start.data, end=form.end.data, subject=subject, status=FREE, comments='')
+                count += 1
+            date += datetime.timedelta(days=1)
+        
+        db.session.add(slot)
+        db.session.commit()
+        return redirect(url_for('view_schedule'))
+    return render_template('repeat_slot.html', title='Amend your dogs availability', form=form, dog=dog)
 
 @app.route('/view_schedule')
 @login_required

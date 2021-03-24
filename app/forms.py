@@ -57,21 +57,34 @@ class EditDogForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class ScheduleForm(FlaskForm):
-    dog = SelectField('Selected Dog: ', validate_choice=True)
     now = datetime.date.today()
     choices = []
     for delta in range(0, 15):
         choices.append(now + datetime.timedelta(days=delta))
     date = SelectField('Date: ', choices=choices, validate_choice=True)
     
-    choices = list(range(0, 23))
+    choices = list(range(0, 24))
     choices = [str(x) + ':00' for x in choices]
-    # for delta in range(0, 15):
-    #     choices.append(now + datetime.timedelta(days=delta))
     start = SelectField('Start time (24hr)', choices=choices, default='9:00', validate_choice=True)
-    # end = StringField('End time (24hr)', validators=[DataRequired()])
     end = SelectField('End time (24hr)', choices=choices, validate_choice=True, default='10:00')
     submit = SubmitField('Submit')
+
+class RepeatScheduleForm(FlaskForm):
+    now = datetime.date.today()
+    choices = []
+    days = [(0,'Monday'), (1,'Tuesday'), (2,'Wednesday'),(3,'Thursday'),(4,'Friday'),(5,'Saturday'),(6,'Sunday')]
+    selected_days = SelectField('Day: ', choices=days, validate_choice=True)
+    repeats = IntegerField('Number of weeks to repeat slot:')
+
+    choices = list(range(0, 24))
+    choices = [str(x) + ':00' for x in choices]
+    start = SelectField('Start time (24hr)', choices=choices, default='9:00', validate_choice=True)
+    end = SelectField('End time (24hr)', choices=choices, validate_choice=True, default='10:00')
+    submit = SubmitField('Submit')
+
+    def validate_repeats(self, repeats):
+        if int(repeats.data) not in range(1, 11):
+            raise ValidationError('Please enter a repeat value between 1 & 10')
 
 class ResetPasswordRequestForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
