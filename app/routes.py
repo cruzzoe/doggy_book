@@ -13,7 +13,13 @@ import imghdr
 
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.jpeg']
-app.config['UPLOAD_PATH'] = 'uploads_dir'
+
+if not app.debug:
+    app.config['UPLOAD_PATH'] = '/dog_data/dog_service/uploads_dir'
+else:
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['UPLOAD_PATH'] = os.path.join(basedir, 'uploads_dir')
+
 app.config['CALENDAR_PATH'] = 'calendar_path'
 
 
@@ -130,7 +136,7 @@ def book_dog():
     slots.sort(key=lambda x: x.date)
 
     # check if picture exists
-    path = os.path.join('app', app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
+    path = os.path.join(app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
     if os.path.exists(path):
         picture = str(dog.id) + '.jpeg'
     else:
@@ -224,8 +230,9 @@ def view_schedule():
     
     picture = None
     # check if picture exists
+    # TODO bug here. Displays the last dog of the user always.
     for dog in dogs:
-        path = os.path.join('app', app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
+        path = os.path.join(app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
         if os.path.exists(path):
             picture = str(dog.id) + '.jpeg'
 
@@ -289,7 +296,7 @@ def upload_photo():
         file_ext = get_file_extension(uploaded_file.stream)
         if file_ext not in app.config['UPLOAD_EXTENSIONS']:
             abort(400)
-        uploaded_file.save(os.path.join('app', app.config['UPLOAD_PATH'], filename + '.jpeg'))
+        uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename + '.jpeg'))
         return redirect(url_for('view_schedule'))
     else:
         return render_template('upload_photo.html')
