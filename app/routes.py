@@ -36,13 +36,15 @@ def inject_gallery():
     if current_user.is_authenticated:
         display = True
         dogs = [dog for dog in Dog.query.all()]
+        
         userdog = Dog.query.filter_by(user_id=current_user.id).first()
         random.shuffle(dogs)
 
-        user_path = os.path.join(app.config['UPLOAD_PATH'], str(userdog.id) + '.jpeg')
-        if os.path.exists(user_path):
-            dogs.remove(userdog)
-            dogs.insert(0, userdog)
+        if userdog:
+            user_path = os.path.join(app.config['UPLOAD_PATH'], str(userdog.id) + '.jpeg')
+            if os.path.exists(user_path):
+                dogs.remove(userdog)
+                dogs.insert(0, userdog)
 
         pic_res = []
         for dog in dogs:
@@ -58,6 +60,9 @@ def inject_gallery():
     else:
         display = False
         pic_res = None
+
+    if not pic_res:
+        display = False
     
     return dict(pic_res=pic_res, display=display)
 
