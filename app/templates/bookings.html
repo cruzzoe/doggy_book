@@ -23,7 +23,6 @@
             <th scope="col">Date</th>
             <th scope="col">Start</th>
             <th scope="col">End</th>
-            <th scope="col">Booked By</th>
             <th scope="col">Comments</th>
             <th scope="col">Action</th>
           </tr>
@@ -36,7 +35,6 @@
                 <td>{{slot.date}}</td>
                 <td>{{slot.start}}</td>
                 <td>{{slot.end}}</td>
-                <td>{{slot.booker.username}}</td>
                 <td>{{slot.comments}}</td>
                 <td><a href="{{ url_for('cancel_slot', slot=slot.id) }}">Cancel Booking</a></td> 
             </tr>
