@@ -20,33 +20,31 @@
     <h6><a href="{{ url_for('upload_photo') }}">Upload Photo</a></h6>
     </br>
     <h4>My Available Slots</h4>
-    {% for dog in dogs %}
-        <h5>{{ dog.dog_name}}</h5>
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">Day</th>
-                <th scope="col">Date</th>
-                <th scope="col">Start</th>
-                <th scope="col">End</th>
-                <th scope="col">Booked By</th>
-                <th scope="col">Comments</th>
-                <th scope="col">Action</th>
-            </tr>
-            </thead>
-            {% for slot in dog.slots.all() %}
-            <tr>
-                <td>{{slot.day_str}}</td>
-                <td>{{slot.date}}</td> 
-                <td>{{slot.start}}</td> 
-                <td>{{slot.end}}</td> 
-                <td>{{slot.booker.username}}</td>
-                <td>{{slot.comments}}</td>
-                <td><a href="{{ url_for('delete_slot', slot=slot.id) }}">Delete Slot</a></td> 
-            </tr>
-            {% endfor %}
-        </table>
-    {% endfor %}
+    <h5>{{ dog.dog_name }}</h5>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Day</th>
+            <th scope="col">Date</th>
+            <th scope="col">Start</th>
+            <th scope="col">End</th>
+            <th scope="col">Booked By</th>
+            <th scope="col">Comments</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        {% for slot in slots %}
+        <tr>
+            <td>{{slot.day_str}}</td>
+            <td>{{slot.date}}</td> 
+            <td>{{slot.start}}</td> 
+            <td>{{slot.end}}</td> 
+            <td>{{slot.booker.username}}</td>
+            <td>{{slot.comments}}</td>
+            <td><a href="{{ url_for('delete_slot', slot=slot.id) }}">Delete Slot</a></td> 
+        </tr>
+        {% endfor %}
+    </table>
 
     {% if picture %}
     <img class="img-fluid rounded mb-5" src="{{ url_for('upload', filename=picture) }}" style="width: 500px">

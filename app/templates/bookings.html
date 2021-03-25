@@ -19,6 +19,7 @@
         <thead>
           <tr>
             <th scope="col">Dog</th>
+            <th scope="col">Day</th>
             <th scope="col">Date</th>
             <th scope="col">Start</th>
             <th scope="col">End</th>
@@ -31,6 +32,7 @@
             {% for slot in slots %}
             <tr>
                 <td>{{slot.subject.dog_name}}</td>
+                <td>{{slot.day_str}}</td>
                 <td>{{slot.date}}</td>
                 <td>{{slot.start}}</td>
                 <td>{{slot.end}}</td>

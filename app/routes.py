@@ -291,17 +291,20 @@ def repeat_slot():
 def view_schedule():
     """View slots existing for your dog"""
     user_id = current_user.id
-    dogs = Dog.query.filter_by(user_id=user_id).all()
+    dog = Dog.query.filter_by(user_id=user_id).first()
     
     picture = None
     # check if picture exists
     # TODO bug here. Displays the last dog of the user always.
-    for dog in dogs:
-        path = os.path.join(app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
-        if os.path.exists(path):
-            picture = str(dog.id) + '.jpeg'
+    # Note at the moment we don't support more than one dog!
+    path = os.path.join(app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
+    if os.path.exists(path):
+        picture = str(dog.id) + '.jpeg'
 
-    return render_template('schedule.html', title='View slots', dogs=dogs, picture=picture)
+    slots = dog.slots.all()
+    slots = [x for x in slots if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.date.today()]
+
+    return render_template('schedule.html', title='View slots', dog=dog, slots=slots, picture=picture)
 
 @app.route('/bookings')
 @login_required
