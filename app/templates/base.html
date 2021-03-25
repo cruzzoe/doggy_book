@@ -68,6 +68,7 @@
       {% endwith %}
       {% block content %}{% endblock %}
 
+      {% if display %}
       <!-- Portfolio Section-->
       <section class="page-section portfolio" id="portfolio">
           <div class="container">
@@ -82,63 +83,64 @@
               <!-- Portfolio Grid Items-->
               <div class="row justify-content-center">
                   <!-- Portfolio Item 1-->
-                  <div class="col-md-6 col-lg-4 mb-5">Eddie and Merlin
+                  <div class="col-md-6 col-lg-4 mb-5">{{ pic_res[0][0].dog_name }} 
                       <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal1">
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/eddiemerlin.jpg" alt="" />
+                          <img class="img-fluid" src="{{ url_for('upload', filename=pic_res[0][1] ) }}" alt="" />
                       </div>
                   </div>
                   <!-- Portfolio Item 2-->
-                  <div class="col-md-6 col-lg-4 mb-5">Oni
+                  <div class="col-md-6 col-lg-4 mb-5">{{ pic_res[1][0].dog_name }} 
                       <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal2">
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/oni.jpg" alt="" />
+                          <img class="img-fluid" src="{{ url_for('upload', filename=pic_res[1][1] ) }}" alt="" />
                       </div>
                   </div>
                   <!-- Portfolio Item 3-->
-                  <div class="col-md-6 col-lg-4 mb-5">Coco
+                  <div class="col-md-6 col-lg-4 mb-5">{{ pic_res[2][0].dog_name }} 
                       <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal3">
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/coco.jpg" alt="" />
+                          <img class="img-fluid" src="{{ url_for('upload', filename=pic_res[2][1] ) }}" alt="" />
                       </div>
                   </div>
                   <!-- Portfolio Item 4-->
-                  <div class="col-md-6 col-lg-4 mb-5 mb-lg-0">Chloe
+                  <div class="col-md-6 col-lg-4 mb-5 mb-lg-0">{{ pic_res[3][0].dog_name }} 
                       <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal4">
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/chloe.jpg" alt="" />
+                          <img class="img-fluid" src="{{ url_for('upload', filename=pic_res[3][1] ) }}" alt="" />
                       </div>
                   </div>
                   <!-- Portfolio Item 5-->
-                  <div class="col-md-6 col-lg-4 mb-5 mb-md-0">Loki
+                  <div class="col-md-6 col-lg-4 mb-5 mb-md-0">{{ pic_res[4][0].dog_name }} 
                       <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal5">
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/loki.jpg" alt="" />
+                          <img class="img-fluid" src="{{ url_for('upload', filename=pic_res[4][1] ) }}" alt="" />
                       </div>
                   </div>
                   <!-- Portfolio Item 6-->
-                  <div class="col-md-6 col-lg-4">Tundra
+                  <div class="col-md-6 col-lg-4">{{ pic_res[5][0].dog_name }} 
                       <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal6">
                           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
                               <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
                           </div>
-                          <img class="img-fluid" src="/static/assets/img/portfolio/tundra.jpg" alt="" />
+                          <img class="img-fluid" src="{{ url_for('upload', filename=pic_res[5][1] ) }}" alt="" />
                       </div>
                   </div>
                 </div>
               </div>
           </div>
       </section>
+      {% endif %}
       <!-- About Section-->
       <section class="page-section bg-primary text-white mb-0" id="about">
           <div class="container">
@@ -241,6 +243,8 @@
       <div class="scroll-to-top d-lg-none position-fixed">
           <a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top"><i class="fa fa-chevron-up"></i></a>
       </div>
+
+      {% if display %}
       <!-- Portfolio Modals-->
       <!-- Portfolio Modal 1-->
       <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-labelledby="portfolioModal1Label" aria-hidden="true">
@@ -254,7 +258,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal1Label">Eddie and Merlin</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal1Label">{{ pic_res[0][0].dog_name }} </h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -262,9 +266,8 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/eddiemerlin2.jpg" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="{{ url_for('upload', filename=pic_res[0][1] ) }}" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">Eddie and Merlin are mischievous brothers who will do anything for a treat. Born in November 2019, they are still pretty young and full of energy. Eddie likes to be the bossy brother, whereas Merlin just spends his time moving from toy to toy, flipping it up and catching it. Both are really good with children and other dogs 🙂</p>
                                   <p class="lead">Want to spend time with me? <a href="{{ url_for('view_dogs') }}">Click to book!</a></p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
@@ -289,7 +292,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal2Label">Oni</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal2Label">{{ pic_res[1][0].dog_name }} </h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -297,9 +300,8 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/oni2.jpeg" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="{{ url_for('upload', filename=pic_res[1][1] ) }}" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">I am a cute girl Cockapoo born in August 2017. I've been living in Lanyard Court for the past three years and I love living here. My favourite thing ever is fetching a ball. Look forward to hanging out with you sometime.</p>
                                   <p class="lead">Want to spend time with me? <a href="{{ url_for('view_dogs') }}">Click to book!</a></p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
@@ -324,7 +326,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal3Label">Coco</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal3Label">{{ pic_res[2][0].dog_name }} </h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -332,9 +334,8 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/coco2.jpg" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="{{ url_for('upload', filename=pic_res[2][1] ) }}" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">Coco is a sassy 2 years old Mini Goldendoodle. She’s super cuddly, friendly and loves a snack (maybe too much)! She loves spending time with he St Paul Sq doggie friends - she’s very gentle with puppies but might need some warm up with bigger breeds as sometimes she thinks they’re out to get her even if they are not 🤪</p>
                                   <p class="lead">Want to spend time with me? <a href="{{ url_for('view_dogs') }}">Click to book!</a></p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
@@ -359,7 +360,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal4Label">Chloe</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal4Label">{{ pic_res[3][0].dog_name }} </h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -367,9 +368,8 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/chloe2.jpg" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="{{ url_for('upload', filename=pic_res[3][1] ) }}" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">Chloe is a little bodyguard, who also believes she's a human, so if you hear barking you'll know it's her trying to protect her human siblings. Chloe the little fluff ball likes to play with other small dogs, and sleep a lot.</p>
                                   <p class="lead">Want to spend time with me? <a href="{{ url_for('view_dogs') }}">Click to book!</a></p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
@@ -394,7 +394,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal5Label">Loki</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal5Label">{{ pic_res[4][0].dog_name }} </h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -402,9 +402,8 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/loki2.jpg" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="{{ url_for('upload', filename=pic_res[4][1] ) }}" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">Loki is recently recovered from Parvo so is a little behind schedule; but once he can come out on March 27th he is ready for lots of fun! He is very high energy (occasionally a little mischievous) and has not yet got round to meeting other pups. He’s excited for his first steps and loves playing!</p>
                                   <p class="lead">Want to spend time with me? <a href="{{ url_for('view_dogs') }}">Click to book!</a></p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
@@ -429,7 +428,7 @@
                           <div class="row justify-content-center">
                               <div class="col-lg-8">
                                   <!-- Portfolio Modal - Title-->
-                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal6Label">Tundra</h2>
+                                  <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal6Label">{{ pic_res[5][0].dog_name }} </h2>
                                   <!-- Icon Divider-->
                                   <div class="divider-custom">
                                       <div class="divider-custom-line"></div>
@@ -437,9 +436,8 @@
                                       <div class="divider-custom-line"></div>
                                   </div>
                                   <!-- Portfolio Modal - Image-->
-                                  <img class="img-fluid rounded mb-5" src="/static/assets/img/portfolio/tundra2.jpg" alt="" />
+                                  <img class="img-fluid rounded mb-5" src="{{ url_for('upload', filename=pic_res[5][1] ) }}" alt="" />
                                   <!-- Portfolio Modal - Text-->
-                                  <p class="mb-5">Hello fellow doggo owners, I am Tundra, a pomsky pupper born on the 28/11/20. I live with my parents, Miriam and Conor in Lanyard Court and am very keen to make new friends both hooman and doggo! I am very confident for my age and love to play with other dogs even those much bigger than me! I also love to chew and am very food motivated (when we are out on walks my mum calls me "the hoover"). I am quite attached to my mum and dad so it would be good for me to build trust with others on my own but also would love to have play dates at my place! Can't wait to meet you all x</p>
                                   <p class="lead">Want to spend time with me? <a href="{{ url_for('view_dogs') }}">Click to book!</a></p>
                                   <button class="btn btn-primary" data-dismiss="modal">
                                       <i class="fas fa-times fa-fw"></i>
@@ -451,6 +449,7 @@
                   </div>
               </div>
           </div>
+          {% endif %}
         <!-- Bootstrap core JS-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>

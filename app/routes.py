@@ -10,6 +10,7 @@ from app.email_utils import send_password_reset_email, send_new_booking_email, s
 from app.enums import BOOKED, FREE
 import os
 import imghdr
+import random
 
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.jpeg']
@@ -28,6 +29,37 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.datetime.utcnow()
         db.session.commit()
+
+
+@app.context_processor
+def inject_gallery():
+    if current_user.is_authenticated:
+        display = True
+        dogs = [dog for dog in Dog.query.all()]
+        userdog = Dog.query.filter_by(user_id=current_user.id).first()
+        random.shuffle(dogs)
+
+        user_path = os.path.join(app.config['UPLOAD_PATH'], str(userdog.id) + '.jpeg')
+        if os.path.exists(user_path):
+            dogs.remove(userdog)
+            dogs.insert(0, userdog)
+
+        pic_res = []
+        for dog in dogs:
+            path = os.path.join(app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
+            if os.path.exists(path):
+                picture_path = str(dog.id) + '.jpeg'
+                res = {}
+                res[dog] = picture_path
+                pic_res.append((dog, picture_path))
+        display = True
+        # Limit gallery size to 6 for now...
+        pic_res = pic_res[:7]
+    else:
+        display = False
+        pic_res = None
+    
+    return dict(pic_res=pic_res, display=display)
 
 @app.route('/')
 @app.route('/index')
