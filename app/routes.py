@@ -163,7 +163,7 @@ def view_dogs():
     dogs = Dog.query.all()
     res = []
     for dog in dogs:
-        if dog.owner != current_user:
+        if dog.owner != current_user and len(dog.free_slots) !=0:
             res.append(dog)
     res.sort(key=lambda x: len(x.free_slots), reverse=True)
     return render_template('view_dogs.html', title='View Dogs', dogs=res)
