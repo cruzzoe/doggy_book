@@ -30,33 +30,36 @@ def before_request():
         current_user.last_seen = datetime.datetime.utcnow()
         db.session.commit()
 
+class Placeholder_dog():
+
+    def __init__(self):
+        self.dog_name = ''
+        self.main_pic = '111.jpg'
 
 @app.context_processor
 def inject_gallery():
-    if current_user.is_authenticated:
-        display = True
-        dogs = [dog for dog in Dog.query.all()]
-        
-        userdog = Dog.query.filter_by(user_id=current_user.id).first()
-        random.shuffle(dogs)
+    next_url = None
+    prev_url = None
 
-        if userdog:
-            user_path = os.path.join(app.config['UPLOAD_PATH'], str(userdog.id) + '.jpeg')
-            if os.path.exists(user_path):
-                dogs.remove(userdog)
-                dogs.insert(0, userdog)
+    if current_user.is_authenticated:
+        page = request.args.get('page', 1, type=int)
+        display = True
+
+        # Limit gallery size to 6 for now...
+        dogs = Dog.query.paginate(page, 6, False)
+        next_url = url_for('index', page=dogs.next_num, _anchor='portfolio') if dogs.has_next else None
+        prev_url = url_for('index', page=dogs.prev_num, _anchor='portfolio') if dogs.has_prev else None
 
         pic_res = []
-        for dog in dogs:
-            path = os.path.join(app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
-            if os.path.exists(path):
-                picture_path = str(dog.id) + '.jpeg'
-                res = {}
-                res[dog] = picture_path
-                pic_res.append((dog, picture_path))
+        for dog in dogs.items:
+            pic_res.append((dog, dog.main_pic))
         display = True
-        # Limit gallery size to 6 for now...
-        pic_res = pic_res[:7]
+
+        placeholder_dog = Placeholder_dog()
+        count = 0
+        while len(pic_res) < 6:
+            placeholder_name = 'placeholder_' + str(count)
+            pic_res.append((Placeholder_dog(), placeholder_dog.main_pic))
     else:
         display = False
         pic_res = None
@@ -64,7 +67,7 @@ def inject_gallery():
     if not pic_res:
         display = False
     
-    return dict(pic_res=pic_res, display=display)
+    return dict(pic_res=pic_res, display=display, next_url=next_url, prev_url=prev_url)
 
 @app.route('/')
 @app.route('/index')
@@ -177,13 +180,7 @@ def book_dog():
     slots = [x for x in slots if x.status != BOOKED]
     slots = [x for x in slots if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.datetime.utcnow().date()]
     slots.sort(key=lambda x: x.date)
-
-    # check if picture exists
-    path = os.path.join(app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
-    if os.path.exists(path):
-        picture = str(dog.id) + '.jpeg'
-    else:
-        picture = None
+    picture = dog.main_pic
     return render_template('book_dog.html', title='Slot booked', dog=dog, slots=slots, picture=picture)
 
 @app.route('/book_slot', methods=['GET', 'POST'])
@@ -298,13 +295,9 @@ def view_schedule():
     user_id = current_user.id
     dog = Dog.query.filter_by(user_id=user_id).first()
     
-    picture = None
-    # check if picture exists
     # TODO bug here. Displays the last dog of the user always.
     # Note at the moment we don't support more than one dog!
-    path = os.path.join(app.config['UPLOAD_PATH'], str(dog.id) + '.jpeg')
-    if os.path.exists(path):
-        picture = str(dog.id) + '.jpeg'
+    picture = dog.main_pic
 
     slots = dog.slots.all()
     slots = [x for x in slots if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.date.today()]
