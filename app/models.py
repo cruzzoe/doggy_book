@@ -5,6 +5,7 @@ from flask_login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_property
 from time import time
 import jwt
+import os
 
 from app.enums import BOOKED, FREE
 
@@ -69,6 +70,16 @@ class Dog(db.Model):
     @hybrid_property
     def age(self):
         return self.dob.strftime("%Y-%m-%d")
+
+    @hybrid_property
+    def main_pic(self):
+        # check if picture exists
+        path = os.path.join(app.config['UPLOAD_PATH'], str(self.id) + '.jpeg')
+        if os.path.exists(path):
+            picture = str(self.id) + '.jpeg'
+        else:
+            picture = 'mutley.jpeg'
+        return picture
 
     def __repr__(self):
         return '<Dog {}>'.format(self.dog_name)

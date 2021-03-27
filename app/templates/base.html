@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
     <head>
       <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -139,8 +140,15 @@
                 </div>
               </div>
           </div>
-      </section>
-      {% endif %}
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+              <li class="page-item{% if not prev_url %} disabled{% endif %}"><a class="page-link" href="{{ prev_url  }}">Previous</a></li>
+              <li class="page-item{% if not next_url %} disabled{% endif %}"><a class="page-link" href="{{ next_url }}">Next</a></li>
+            </ul>
+          </nav>
+    </section>
+    {% endif %}
+
       <!-- About Section-->
       <section class="page-section bg-primary text-white mb-0" id="about">
           <div class="container">
