@@ -416,10 +416,14 @@ def get_file_extension(stream):
 @authorised_only
 @login_required
 def upload_photo():
+    user_id = current_user
+    dog = Dog.query.filter_by(owner=user_id).first()
+    if not dog:
+        flash('Please register a dog to your account.')
+        return redirect(url_for('view_schedule'))
+
     if request.method == 'POST':
         uploaded_file = request.files['file']
-        user_id = current_user
-        dog = Dog.query.filter_by(owner=user_id).first()
         filename = str(dog.id)
         file_ext = get_file_extension(uploaded_file.stream)
         if file_ext not in app.config['UPLOAD_EXTENSIONS']:
