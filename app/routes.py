@@ -233,6 +233,7 @@ def confirmed():
     slot = Slot.query.filter_by(id=slot).first()
     slot.booker = current_user
     slot.status = BOOKED
+    # slot.booked_timestamp = datetime.datetime.utcnow()
     db.session.add(slot)
     db.session.commit()
     send_new_booking_email(slot)
@@ -332,6 +333,7 @@ def view_schedule():
         picture = dog.main_pic
         slots = dog.slots.all()
         slots = [x for x in slots if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.date.today()]
+        slots.sort(key=lambda x: x.date)
     else:
         picture = ''
         slots = []
@@ -344,6 +346,7 @@ def bookings():
     """View user bookings made for others dogs"""
     slots = Slot.query.filter_by(booking_user=current_user.id).all()
     slots = [x for x in slots if x.status == BOOKED]
+    slots.sort(key=lambda x: x.date)
     return render_template('bookings.html', title='View slots', slots=slots)
 
 @app.route('/reset_password_request', methods=['GET', 'POST'])
