@@ -98,7 +98,9 @@ def index():
     user_count = get_number_of_users()
     future_booked_count = get_number_of_upcoming_bookings()
     available_sessions = get_number_of_upcoming_available()
-    return render_template('index.html', title='Home', number_of_bookings=number_of_bookings, user_count=user_count, future_booked_count=future_booked_count, available_sessions=available_sessions)
+    header_img = random_pic()
+    return render_template('index.html', title='Home', number_of_bookings=number_of_bookings, user_count=user_count, future_booked_count=future_booked_count, 
+                           available_sessions=available_sessions, header_img=header_img)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -408,6 +410,18 @@ def upload_photo():
 @login_required
 def upload(filename):
     return send_from_directory(app.config['UPLOAD_PATH'], filename)
+
+@app.route('/upload_header/<filename>')
+@login_required
+def upload_header(filename):
+    return send_from_directory(os.path.join(app.config['UPLOAD_PATH'], 'header_images'), filename)
+
+def random_pic():
+    dir_path = os.path.join(app.config['UPLOAD_PATH'], 'header_images')
+    group_pics = os.listdir(dir_path)
+    random.shuffle(group_pics)
+    selected = group_pics[0]
+    return selected
 
 # @app.route('/dog/<dog_id>')
 # @login_required

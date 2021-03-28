@@ -7,15 +7,7 @@
         <header class="masthead bg-primary text-white text-center">
             <div class="container d-flex align-items-center flex-column">
 
-            <p class="lead">
-                Number of users: {{ user_count }}</br>
-                Playtime sessions completed: {{ number_of_bookings }}</br>
-                Booked upcoming playtime sessions: {{ future_booked_count }}</br>
-                Playtime sessions available: {{ available_sessions }}</br>
-            <br></br>
-            </p>
             <!-- Masthead Avatar Image-->
-            <img class="masthead-avatar mb-5" src="/static/assets/img/groupshot.jpg" alt="" />
             <!-- Masthead Heading-->
             <h1 class="masthead-heading text-uppercase mb-0">Dog Booker</h1>
             <!-- Icon Divider-->
@@ -27,10 +19,19 @@
             <!-- Masthead Subheading-->
             <p class="masthead-subheading font-weight-light mb-0">
                 <title>{{ title }} - Dog Booker</title>
-                <!-- <h2>Welcome to Dog Booker!</h2> -->
             </br>
+            <img class="img-fluid rounded mb-1" src="{{ url_for('upload_header', filename=header_img) }}" alt="" />
                 <body>
-                    <h4>Welcome to Dog Booker, {{ current_user.first_name }}!</h4></br>
+                    <br></br>
+                    <h4>Welcome to Dog Booker, {{ current_user.first_name  }}!</h4></br>
+
+                    <p class="lead">
+                        Number of users: {{ user_count }}</br>
+                        Playtime sessions completed: {{ number_of_bookings }}</br>
+                        Booked upcoming playtime sessions: {{ future_booked_count }}</br>
+                        Playtime sessions available: {{ available_sessions }}</br>
+                    <br></br>
+                    </p>
                     <h5>FAQs in 3 easy steps!</h5></br>
                     <p class="lead">
                         Step 1. Register your dog under the <u>My Dog</u> Section.
@@ -43,14 +44,6 @@
                     </p>
                     
                     <h5>Notes:</h5></br>
-                    <p class="lead">
-                        
-                        
-                        
-
-                        
-                    </p>
-
                     <ul>
                         <li>Please check your spam box as Gmail keeps putting mails there for some users until you report as not spam!</li>
                         <li>Your dog will not show under the New Bookings section on your account. To confirm your dog has been added to the site sucessfully select My Dog section.</li>
