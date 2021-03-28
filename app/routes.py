@@ -73,11 +73,22 @@ def get_number_of_completed_bookings():
     slots = Slot.query.all()
     n_of_bookings = len([x for x in slots if x.status == BOOKED if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() < datetime.date.today()])
     return n_of_bookings
+    
+def get_number_of_upcoming_bookings():
+    """Booked upcoming session"""
+    slots = Slot.query.all()
+    n_of_bookings = len([x for x in slots if x.status == BOOKED if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.date.today()])
+    return n_of_bookings
 
 def get_number_of_users():
     users = User.query.all()
     user_count = len([x for x in users])
     return user_count
+
+def get_number_of_upcoming_available():
+    slots = Slot.query.all()
+    n_of_bookings = len([x for x in slots if x.status == FREE if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.date.today()])
+    return n_of_bookings
 
 @app.route('/')
 @app.route('/index')
@@ -85,7 +96,9 @@ def get_number_of_users():
 def index():
     number_of_bookings = get_number_of_completed_bookings()
     user_count = get_number_of_users()
-    return render_template('index.html', title='Home', number_of_bookings=number_of_bookings, user_count=user_count)
+    future_booked_count = get_number_of_upcoming_bookings()
+    available_sessions = get_number_of_upcoming_available()
+    return render_template('index.html', title='Home', number_of_bookings=number_of_bookings, user_count=user_count, future_booked_count=future_booked_count, available_sessions=available_sessions)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
