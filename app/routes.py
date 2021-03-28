@@ -8,6 +8,7 @@ from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, Schedule
 from app import db
 from app.email_utils import send_password_reset_email, send_new_booking_email, send_cancellation_email, send_deletion_email
 from app.enums import BOOKED, FREE
+from functools import wraps
 import os
 import imghdr
 import random
@@ -22,6 +23,19 @@ else:
     app.config['UPLOAD_PATH'] = os.path.join(basedir, 'uploads_dir')
 
 app.config['CALENDAR_PATH'] = 'calendar_path'
+
+def authorised_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if current_user is None:
+            return redirect(url_for('login', next=request.url))
+        user = User.query.filter_by(id=current_user.id).first()
+        if user.account_type != 'STANDARD':
+            flash('Demo account detected. You do not have permission for this action.')
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 
 @app.before_request
@@ -133,6 +147,7 @@ def register():
     if form.validate_on_submit():
         user = User(username=form.username.data.lower().strip(), email=form.email.data,
                     phone=form.phone.data,
+                    account_type='STANDARD',
                     first_name=form.first_name.data, last_name=form.last_name.data)
         user.set_password(form.password.data)
         db.session.add(user)
@@ -144,6 +159,7 @@ def register():
 
 
 @app.route('/register_dog/', methods=['GET', 'POST'])
+@authorised_only
 @login_required
 def register_dog():
     """Submit your dog to the site"""
@@ -211,6 +227,7 @@ def book_dog():
     return render_template('book_dog.html', title='Slot booked', dog=dog, slots=slots, picture=picture)
 
 @app.route('/book_slot', methods=['GET', 'POST'])
+@authorised_only
 @login_required
 def book_slot():
     form = BookingForm()
@@ -390,6 +407,7 @@ def get_file_extension(stream):
     return '.' + (file_format if file_format != 'jpeg' else 'jpg')
 
 @app.route('/upload_photo', methods=['GET', 'POST'])
+@authorised_only
 @login_required
 def upload_photo():
     if request.method == 'POST':
