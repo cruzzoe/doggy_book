@@ -287,15 +287,16 @@ def delete_slot():
     return redirect(url_for('view_schedule'))
 
 @app.route('/new_slot', methods=['GET', 'POST'])
+@authorised_only
 @login_required
 def new_slot():
-    """Book a new slot for dogs owned by user"""
+    """Create a new slot for dogs owned by user"""
     user_id = current_user.id
     form = ScheduleForm()
     dog = Dog.query.filter_by(user_id=user_id).first()
 
     if not dog:
-        # TODO Add flash message
+        flash('Please register a dog to your account.')
         return redirect(url_for('view_schedule'))
 
     dog_name = dog.dog_name
@@ -311,16 +312,21 @@ def new_slot():
     return render_template('new_slot.html', title='Amend your dogs availability', form=form, dog=dog.dog_name)
 
 @app.route('/repeat_slot', methods=['GET', 'POST'])
+@authorised_only
 @login_required
 def repeat_slot():
     """Book a new slot for dogs owned by user"""
     user_id = current_user.id
     form = RepeatScheduleForm()
-    dog = Dog.query.filter_by(user_id=user_id).first().dog_name
+    dog = Dog.query.filter_by(user_id=user_id).first()
+    if not dog:
+        flash('Please register a dog to your account.')
+        return redirect(url_for('view_schedule'))
 
+    dog_name = dog.dog_name
     if form.validate_on_submit():
         user_id = current_user
-        subject = Dog.query.filter_by(dog_name=dog).first()
+        subject = dog
         selected_day = int(form.selected_days.data)
         repeats = form.repeats.data        
         # Starting from the selected day below, create slots up to the number specified in Slot Repeats (up to 10)
@@ -336,7 +342,7 @@ def repeat_slot():
         db.session.add(slot)
         db.session.commit()
         return redirect(url_for('view_schedule'))
-    return render_template('repeat_slot.html', title='Amend your dogs availability', form=form, dog=dog)
+    return render_template('repeat_slot.html', title='Amend your dogs availability', form=form, dog=dog_name)
 
 @app.route('/view_schedule')
 @login_required
