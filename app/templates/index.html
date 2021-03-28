@@ -4,9 +4,27 @@
 <!-- Once logged in, this page will display to welcome users-->
 <!-- Masthead-->
 <section class="page-section" id="page-top">
-        <header class="masthead bg-primary text-white text-center">
-            <div class="container d-flex align-items-center flex-column">
 
+        <div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <!-- <strong>Title</strong> --> {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+
+        <header class="masthead bg-primary text-white text-center">
+            
+
+            
+            <div class="container d-flex align-items-center flex-column">
+            
             <!-- Masthead Avatar Image-->
             <!-- Masthead Heading-->
             <h1 class="masthead-heading text-uppercase mb-0">Dog Booker</h1>
@@ -16,6 +34,7 @@
                 <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                 <div class="divider-custom-line"></div>
             </div>
+
             <!-- Masthead Subheading-->
             <p class="masthead-subheading font-weight-light mb-0">
                 <title>{{ title }} - Dog Booker</title>
