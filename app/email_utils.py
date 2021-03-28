@@ -13,7 +13,7 @@ def send_async_email(app, msg):
         mail.send(msg)
 
 def send_email(subject, sender, recipients, text_body, html_body, attachment_path=None):
-    if not app.debug:
+    if app.debug:
         msg = Message(subject, sender=sender, recipients=recipients)
         msg.body = text_body
         msg.html = html_body
@@ -45,6 +45,16 @@ def create_calendar_file(slot):
     date = slot.date
     start = slot.start
     end = slot.end
+    
+    # Site times are in local time. Calendar ics files in UTC. 
+    # During BST that means a 10AM slot start would appear as 11AM in BST
+    # Therefore necessary to convert to local time
+    # TODO this is a quick hack. Fix properly!
+    first_val_start = start.split(':')[0]
+    start = str(int(first_val_start) - 1) + ':' + start.split(':')[1]
+
+    first_val_end = end.split(':')[0]
+    end = str(int(first_val_end) - 1) + ':' + end.split(':')[1]
 
     # check if start in correct format
     first_val = start.split(':')[0]
@@ -56,7 +66,6 @@ def create_calendar_file(slot):
     if len(first_val) == 1:
         end = '0' + end
 
-    # date_time = date.strftime('%Y-%m-%d')
     start_str = date + ' ' + start + ':00'
     end_str = date + ' ' + end + ':00'
     e.name = "Dog Booker: " + dog_name
