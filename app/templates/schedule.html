@@ -13,6 +13,20 @@
             <div class="divider-custom-line"></div>
         </div>
 
+    <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <!-- <strong>Title</strong> --> {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
     <h6><a href="{{ url_for('register_dog') }}/">Register Dog</a></h6>
     <h6><a href="{{ url_for('new_slot') }}">Add Slot</a></h6>
     <h6><a href="{{ url_for('repeat_slot') }}">Repeat Slot</a></h6>

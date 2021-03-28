@@ -230,7 +230,6 @@ def book_slot():
 @app.route('/confirmed')
 @login_required
 def confirmed():
-    flash('You\'r booking is confirmed! An email has been sent to both parties.')
     slot = request.args.get('slot')
     slot = Slot.query.filter_by(id=slot).first()
     slot.booker = current_user
@@ -239,7 +238,8 @@ def confirmed():
     db.session.add(slot)
     db.session.commit()
     send_new_booking_email(slot)
-    return  redirect(url_for('bookings'))
+    flash('You\'re booking is confirmed! An email has been sent to both parties.')
+    return redirect(url_for('bookings'))
 
 @app.route('/cancel_slot')
 @login_required
@@ -252,8 +252,7 @@ def cancel_slot():
     slot.comments = ''
     slot.booker = None
     db.session.commit()
-    # TODO Deb - doesn't display flash msg.
-    flash('Slot status cleared')
+    flash('Booking succesfully cancelled. Notification has been sent via email.')
     return redirect(url_for('bookings'))
 
 @app.route('/delete_slot')
@@ -290,7 +289,7 @@ def new_slot():
         slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject, status=FREE, comments='')
         db.session.add(slot)
         db.session.commit()
-        flash('Schedule amended')
+        flash('New slot added')
         return redirect(url_for('view_schedule'))
     return render_template('new_slot.html', title='Amend your dogs availability', form=form, dog=dog.dog_name)
 
