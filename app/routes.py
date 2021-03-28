@@ -69,11 +69,23 @@ def inject_gallery():
     
     return dict(pic_res=pic_res, display=display, next_url=next_url, prev_url=prev_url)
 
+def get_number_of_completed_bookings():
+    slots = Slot.query.all()
+    n_of_bookings = len([x for x in slots if x.status == BOOKED if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() < datetime.date.today()])
+    return n_of_bookings
+
+def get_number_of_users():
+    users = User.query.all()
+    user_count = len([x for x in users])
+    return user_count
+
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
-    return render_template('index.html', title='Home')
+    number_of_bookings = get_number_of_completed_bookings()
+    user_count = get_number_of_users()
+    return render_template('index.html', title='Home', number_of_bookings=number_of_bookings, user_count=user_count)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -248,17 +260,23 @@ def new_slot():
     """Book a new slot for dogs owned by user"""
     user_id = current_user.id
     form = ScheduleForm()
-    dog = Dog.query.filter_by(user_id=user_id).first().dog_name
+    dog = Dog.query.filter_by(user_id=user_id).first()
+
+    if not dog:
+        # TODO Add flash message
+        return redirect(url_for('view_schedule'))
+
+    dog_name = dog.dog_name
 
     if form.validate_on_submit():
         user_id = current_user
-        subject = Dog.query.filter_by(dog_name=dog).first()
+        subject = Dog.query.filter_by(dog_name=dog.dog_name).first()
         slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject, status=FREE, comments='')
         db.session.add(slot)
         db.session.commit()
         flash('Schedule amended')
         return redirect(url_for('view_schedule'))
-    return render_template('new_slot.html', title='Amend your dogs availability', form=form, dog=dog)
+    return render_template('new_slot.html', title='Amend your dogs availability', form=form, dog=dog.dog_name)
 
 @app.route('/repeat_slot', methods=['GET', 'POST'])
 @login_required
@@ -297,10 +315,13 @@ def view_schedule():
     
     # TODO bug here. Displays the last dog of the user always.
     # Note at the moment we don't support more than one dog!
-    picture = dog.main_pic
-
-    slots = dog.slots.all()
-    slots = [x for x in slots if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.date.today()]
+    if dog:
+        picture = dog.main_pic
+        slots = dog.slots.all()
+        slots = [x for x in slots if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.date.today()]
+    else:
+        picture = ''
+        slots = []
 
     return render_template('schedule.html', title='View slots', dog=dog, slots=slots, picture=picture)
 
