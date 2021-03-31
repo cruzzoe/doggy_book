@@ -369,9 +369,13 @@ def view_schedule():
 def bookings():
     """View user bookings made for others dogs"""
     slots = Slot.query.filter_by(booking_user=current_user.id).all()
-    slots = [x for x in slots if x.status == BOOKED]
-    slots.sort(key=lambda x: x.date)
-    return render_template('bookings.html', title='View slots', slots=slots)
+    future_slots = [x for x in slots if x.status == BOOKED and datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.datetime.today().date()]
+    future_slots.sort(key=lambda x: x.date)
+
+    past_slots = Slot.query.filter_by(booking_user=current_user.id).all()
+    past_slots = [x for x in slots if x.status == BOOKED and datetime.datetime.strptime(x.date, '%Y-%m-%d').date() < datetime.datetime.today().date()]
+    past_slots.sort(key=lambda x: x.date)
+    return render_template('bookings.html', title='View slots', future_slots=future_slots, past_slots=past_slots)
 
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():

@@ -5,7 +5,7 @@
 <section class="page-section" id="bookings">
     <div class="container"> 
         <!-- Contact Section Heading-->
-        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Bookings</h2>
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Social Bookings</h2>
         <!-- Icon Divider-->
         <div class="divider-custom">
             <div class="divider-custom-line"></div>
@@ -27,7 +27,7 @@
         {% endwith %}
     </div>
 
-    <h2>My Bookings</h2>
+    <h2>Future Bookings</h2>
     </br>
     <table class="table table-hover">
         <thead>
@@ -42,7 +42,7 @@
           </tr>
         </thead>
         <tbody>
-            {% for slot in slots %}
+            {% for slot in future_slots %}
             <tr>
                 <td>{{slot.subject.dog_name}}</td>
                 <td>{{slot.day_str}}</td>
@@ -51,6 +51,33 @@
                 <td>{{slot.end}}</td>
                 <td>{{slot.comments}}</td>
                 <td><a href="{{ url_for('cancel_slot', slot=slot.id) }}">Cancel Booking</a></td> 
+            </tr>
+            {% endfor %}
+        </tbody> 
+    </table>
+    <br></br>
+    <h2>Past Bookings</h2>
+    </br>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Dog</th>
+            <th scope="col">Day</th>
+            <th scope="col">Date</th>
+            <th scope="col">Start</th>
+            <th scope="col">End</th>
+            <th scope="col">Comments</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for slot in past_slots %}
+            <tr>
+                <td>{{slot.subject.dog_name}}</td>
+                <td>{{slot.day_str}}</td>
+                <td>{{slot.date}}</td>
+                <td>{{slot.start}}</td>
+                <td>{{slot.end}}</td>
+                <td>{{slot.comments}}</td>
             </tr>
             {% endfor %}
         </tbody> 
