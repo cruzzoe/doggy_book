@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-section" id="user_info">
+    <div class="container"> 
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Pick Contacts</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <p> To use dog blast you need to pick contacts who you are happy to leave your dog with</p>
+        <p> Find the user you wish to add and click Add. Should you need to remove the user, click remove in the table below. </p>
+        <p> Once happy with your choice, click on the Save button. </p>
+
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+                <p>
+                    {{ form.user.label }}</br>
+                    {{ form.user(size=8)}}</br>
+                    {% for error in form.user.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+
+                <p>
+                {{ form.submit(class_="btn btn-primary btn-xl") }}
+                </p>
+        <br></br>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                <th scope="col">User</th>
+                <!-- <th scope="col">Dog</th> -->
+                <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{user}}</td>
+                <td><a href="{{ url_for('remove_user', user=user ) }}">Remove user!</a></td>
+            </tr>
+            {% endfor %}
+        
+    </tbody>
+</table>
+<!-- {{ form.save(class_="btn btn-primary btn-xl") }} -->
+</form>
+        
+    </div>
+</section>
+{% endblock %}

@@ -2,9 +2,9 @@ from app import app
 import datetime
 from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory
 from flask_login import login_user, logout_user, current_user, login_required
-from app.models import User, Dog, Slot
+from app.models import User, Dog, Slot, BlastConfig, Blast
 from werkzeug.urls import url_parse
-from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm, EditDogForm, ResetPasswordForm, ResetPasswordRequestForm, BookingForm, RepeatScheduleForm
+from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm, EditDogForm, ResetPasswordForm, ResetPasswordRequestForm, BookingForm, RepeatScheduleForm, DogBlastForm, DogBlastContacts
 from app import db
 from app.email_utils import send_password_reset_email, send_new_booking_email, send_cancellation_email, send_deletion_email
 from app.enums import BOOKED, FREE
@@ -466,3 +466,67 @@ def random_pic():
 #     else:
 #         picture = None
 #     return render_template('dog.html', dog=dog, picture=picture)
+
+@app.route('/dog_blast')
+@login_required
+def dog_blast():
+    """Create a dog blast"""
+    user_id = current_user.id
+    form = DogBlastForm()
+    dog = Dog.query.filter_by(user_id=user_id).first()
+
+    if not dog:
+        flash('Please register a dog to your account.')
+        return redirect(url_for('view_schedule'))
+
+    dog_name = dog.dog_name
+
+    if form.validate_on_submit():
+        user_id = current_user
+        subject = Dog.query.filter_by(dog_name=dog.dog_name).first()
+
+        slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject, status=FREE, comments='', info=form.info, slot_type='BLAST')
+
+        # Find users selected recipients
+        recipients = current_user.blast_recipients.all()
+        for recipient in recipients:
+            blast = Blast(receiver=recipient, slot_id=slot.id)
+
+        db.session.add(slot)
+        db.session.add(blast)
+        db.session.commit()
+        flash('Dog Blast dispatched to selected recipients')
+        return redirect(url_for('view_schedule'))
+    return render_template('dog_blast.html', title='Dog Blast', form=form, dog=dog.dog_name)
+
+
+@app.route('/blast_contacts', methods=['GET', 'POST'])
+@login_required
+def blast_contacts():
+    """Configure dog blast contacts"""
+    user_id = current_user.id
+    form = DogBlastContacts()
+    form.user.choices = [x.username for x in User.query.all() if x != current_user]
+    blast_config = current_user.blast_recipients.all()
+    users = [x.recipient for x in blast_config]
+
+    if form.validate_on_submit():
+        if BlastConfig.query.filter_by(recipient=form.user.data, blast_owner=current_user).first():
+            # already exists
+            flash('Contact already exists')
+        else:
+            bc = BlastConfig(recipient=form.user.data, blast_owner=current_user)
+            db.session.add(bc)
+            db.session.commit()
+        return redirect(url_for('blast_contacts'))
+    return render_template('blast_contacts.html', title='Configure Dog Blast', form=form, users=users)
+
+@app.route('/remove_user/<user>', methods=['GET', 'POST'])
+@login_required
+def remove_user(user):
+    """Remove user from doggy blast contacts"""
+    blaster = current_user.id
+    bc = BlastConfig.query.filter_by(recipient=user, blaster=blaster).first()
+    db.session.delete(bc)
+    db.session.commit()
+    return redirect(url_for('blast_contacts'))

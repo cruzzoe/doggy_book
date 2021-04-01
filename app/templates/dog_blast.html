@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!--Linked to My Dogs and Add slot page-->
+<section class="page-section" id="add_slots">
+    <div class="container"> 
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Add Available Slots</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+            <h3> Dispatch a dog blast for {{ dog }} </h3>
+            <p>Lockdown is over! Looking forward to a fancy meal or going to the cinema again? Dog blast is the new option to send out a request to your selected carers to request doggy care.</p>
+            <p>The dog blast request will notify your selected carers via email and show to only them via the website. As soon as someone accepts your dog blast request, you will receive an email & the booking will show on the website.
+            <p> Further info can be added into the request if needed. </p>
+            <p>To configure your dog blast selected carers <a href="{{ url_for('blast_contacts') }}">click here </a> or select the option in My Dog. </p>
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.date.label }}<br>
+                    {{ form.date(size=4) }}<br>
+                    {% for error in form.date.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.start.label }}<br>
+                    {{ form.start(size=3) }}<br>
+                    {% for error in form.start.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.end.label }}<br>
+                    {{ form.end(size=3) }}<br>
+                    {% for error in form.end.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+
+                <p>
+                    {{ form.info.label }}</br>
+                    {{ form.info(size=100)}}</br>
+                    {% for error in form.info.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+
+                <p>
+                    {{ form.submit(class_="btn btn-primary btn-xl") }}
+                </p>
+                    
+                
+            </form>
+        {% endblock %}

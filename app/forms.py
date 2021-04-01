@@ -95,3 +95,22 @@ class ResetPasswordForm(FlaskForm):
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Request Password Reset')
+
+class DogBlastForm(FlaskForm):
+    now = datetime.date.today()
+    choices = []
+    for delta in range(0, 15):
+        choices.append(now + datetime.timedelta(days=delta))
+    date = SelectField('Date: ', choices=choices, validate_choice=True)
+    
+    choices = list(range(0, 24))
+    choices = [str(x) + ':00' for x in choices]
+    start = SelectField('Start time (24hr)', choices=choices, default='9:00', validate_choice=True)
+    end = SelectField('End time (24hr)', choices=choices, validate_choice=True, default='10:00')
+    info = TextAreaField('Comments', validators=[Length(min=0, max=100000)])
+    submit = SubmitField('Submit')
+
+class DogBlastContacts(FlaskForm):
+    user = SelectField('User', validate_choice=True)
+    submit = SubmitField('Add User')
+    save = SubmitField('Save')

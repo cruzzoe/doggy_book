@@ -25,6 +25,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     dogs = db.relationship('Dog', backref='owner', lazy='dynamic')
     booking_slot = db.relationship('Slot', backref='booker', lazy='dynamic')
+    blast_recipients = db.relationship('BlastConfig', backref='blast_owner', lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -96,9 +97,38 @@ class Slot(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     comments = db.Column(db.Text())
 
+    # Capture the type of slot. e.g blast or social
+    slot_type = db.Column(db.String(140))
+
+    # Link to blasts
+    blasts = db.relationship('Blast', backref='slot', lazy='dynamic')
+
     def __repr__(self):
         return '<Slot {}>'.format(str(self.id))
 
     @hybrid_property
     def day_str(self):
         return datetime.strptime(self.date, "%Y-%m-%d").date().strftime('%A')
+
+class Blast(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.String(140))
+    # the person accepting the booking
+    receiver = db.Column(db.Integer, db.ForeignKey('user.id'))
+    slot_id = db.Column(db.Integer, db.ForeignKey('slot.id'))
+    # blaster is the person sending out the blast request
+    # blaster = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    comments = db.Column(db.Text())
+
+    def __repr__(self):
+        return '<Blast {}>'.format(str(self.id))
+
+    @hybrid_property
+    def day_str(self):
+        return datetime.strptime(self.date, "%Y-%m-%d").date().strftime('%A')
+
+class BlastConfig(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    blaster = db.Column(db.Integer, db.ForeignKey('user.id'))
+    recipient = db.Column(db.String(140))
