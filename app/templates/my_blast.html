@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Linked to New Booking where users can see available dogs and allows you to make bookings-->
+<section class="page-section" id="bookings">
+    <div class="container"> 
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">My Dispatched Dog Blast</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+    <!--New booking section starts here-->
+    <h5>My blast info:</h5>
+    <p>Date: {{ slot.date}}</p>
+    <p>Start: {{ slot.start}}</p>
+    <p>End: {{ slot.end}}</p>
+    <p>Status: {{ slot.status}}</p>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Receiver</th>
+            <th scope="col">Response</th>
+            <th scope="col">Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for blast in blasts %}
+            <tr>
+                <td>{{blast.blast_receiver.first_name}}</td>
+                <td>{{blast.status}}</td>
+                <td>{{blast.comments}} </td>
+            </tr>    
+            {% endfor %}     
+        </tbody>
+    </table>
+{% endblock %}

@@ -58,6 +58,9 @@ class EditDogForm(FlaskForm):
 
 class ScheduleForm(FlaskForm):
     now = datetime.date.today()
+    # TODO bug here. date doesnt update meaning values are stuck from when service last started.
+    # Move this to routes.py
+    # https://github.com/miguelgrinberg/microblog/issues/143
     choices = []
     for delta in range(0, 15):
         choices.append(now + datetime.timedelta(days=delta))

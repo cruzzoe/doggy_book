@@ -27,6 +27,12 @@ class User(UserMixin, db.Model):
     booking_slot = db.relationship('Slot', backref='booker', lazy='dynamic')
     blast_recipients = db.relationship('BlastConfig', backref='blast_owner', lazy='dynamic')
 
+    # Relationship between blast and user for receiver.
+    received_blasts = db.relationship('Blast', backref='blast_receiver', lazy='dynamic', foreign_keys='Blast.receiver')
+    # Dispatcher of blasts
+    sent_blasts = db.relationship('Blast', backref='blast_sender', lazy='dynamic', foreign_keys='Blast.blaster')
+
+
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
@@ -64,9 +70,10 @@ class Dog(db.Model):
 
     @hybrid_property
     def free_slots(self):
+        # TODO rename to free_social_slots
         # TODO - bug here. Doesn't respect times of slot when calculating free slot.
         # TODO should return an int. Not a list of free slots.
-        slots = [x for x in self.slots.all() if x.status != BOOKED and datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.utcnow().date()]
+        slots = [x for x in self.slots.all() if x.status != BOOKED and x.slot_type != 'BLAST' and datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.utcnow().date()]
         return slots
 
     @hybrid_property
@@ -114,10 +121,12 @@ class Blast(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(140))
     # the person accepting the booking
+    # receiver = db.Column(db.String(140))
     receiver = db.Column(db.Integer, db.ForeignKey('user.id'))
     slot_id = db.Column(db.Integer, db.ForeignKey('slot.id'))
+    
     # blaster is the person sending out the blast request
-    # blaster = db.Column(db.Integer, db.ForeignKey('user.id'))
+    blaster = db.Column(db.Integer, db.ForeignKey('user.id'))
     # timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     comments = db.Column(db.Text())
 

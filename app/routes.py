@@ -108,6 +108,26 @@ def get_number_of_upcoming_available():
 @app.route('/index')
 @login_required
 def index():
+    # check for incoming dog blasts
+    # TODO need to take into account date
+    blasts = Blast.query.filter_by(receiver=current_user.id).filter_by(status='').all()
+    if blasts:
+        for blast in blasts:
+            sender = blast.slot.subject.owner.username
+            link = url_for('view_blast', blast_id = blast.id)
+            msg = "You have received a dog blast from: " + sender + '. Please reply!  <a href="{0}" class="alert-link">here</a>'.format(link)
+            flash(msg)
+
+    # check for active blasts
+    blast_slots = Slot.query.filter_by(slot_type='BLAST').all()
+    # TODO need to take into account date
+    blast_slots = [x for x in blast_slots if x.subject.owner.id == current_user.id]
+    if blast_slots:
+        for slot in blast_slots:
+            link = url_for('my_blast', slot_id = slot.id)
+            msg = "My blast sent for: " +  slot.date  +  '. Status: '  + slot.status + ' ----> Click <a href="{0}" class="alert-link">here</a>'.format(link)
+            flash(msg)
+
     number_of_bookings = get_number_of_completed_bookings()
     user_count = get_number_of_users()
     future_booked_count = get_number_of_upcoming_bookings()
@@ -206,6 +226,7 @@ def edit_dog():
 @app.route('/view_dogs')
 @login_required
 def view_dogs():
+    # TODO Don't show Dog blasts
     dogs = Dog.query.all()
     res = []
     for dog in dogs:
@@ -219,7 +240,7 @@ def view_dogs():
 def book_dog():
     dog_name = request.args.get('dog_name')
     dog = Dog.query.filter_by(dog_name=dog_name).first()
-    slots = dog.slots.all()
+    slots = dog.slots.filter(Slot.slot_type != 'BLAST').all()
     slots = [x for x in slots if x.status != BOOKED]
     slots = [x for x in slots if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.datetime.utcnow().date()]
     slots.sort(key=lambda x: x.date)
@@ -264,6 +285,13 @@ def cancel_slot():
     """Cancel booking and make available again for other users to book."""
     slot = request.args.get('slot')
     slot = Slot.query.filter_by(id=slot).first()
+
+    # check if any blasts attached. i.e was this a dog blast? if so only status changes.
+    blasts = slot.blasts
+    if blasts:
+        for blast in blasts:
+            blast.status = ''
+
     send_cancellation_email(slot)
     slot.status = FREE
     slot.comments = ''
@@ -280,6 +308,12 @@ def delete_slot():
 
     if slot.booker is not None:
         send_deletion_email(slot)
+
+    blasts = slot.blasts.all()
+    if blasts:
+        for blast in blasts:
+            # TODO mark these as cancelled rather than delete
+            db.session.delete(blast)
 
     db.session.delete(slot)
     db.session.commit()
@@ -467,10 +501,19 @@ def random_pic():
 #         picture = None
 #     return render_template('dog.html', dog=dog, picture=picture)
 
-@app.route('/dog_blast')
+@app.route('/dog_blast', methods=['GET', 'POST'])
 @login_required
 def dog_blast():
     """Create a dog blast"""
+
+    # TODO - show configure screen if dog_blast not configured.
+
+    # Check if user has received an unactioned dog blast. Don't check if skip is True
+    # skip = request.args.get('skip', 0, type=int)
+    # if Blast.query.filter_by(receiver=current_user.username).all() and not skip:
+    #     flash('You have received a dog blast. Please reply!')
+    #     return redirect(url_for('active_blast'))
+
     user_id = current_user.id
     form = DogBlastForm()
     dog = Dog.query.filter_by(user_id=user_id).first()
@@ -485,16 +528,21 @@ def dog_blast():
         user_id = current_user
         subject = Dog.query.filter_by(dog_name=dog.dog_name).first()
 
-        slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject, status=FREE, comments='', info=form.info, slot_type='BLAST')
+        slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, 
+                    subject=subject, status=FREE, comments=form.info.data, slot_type='BLAST')
 
         # Find users selected recipients
-        recipients = current_user.blast_recipients.all()
-        for recipient in recipients:
-            blast = Blast(receiver=recipient, slot_id=slot.id)
+        #  bcs is a list of recipient configs (blast config object)
+        bcs = current_user.blast_recipients.all()
+        for blast_config in bcs:
+            user = User.query.filter_by(username=blast_config.recipient).first()
+            user_id = user.id
+            blast = Blast(receiver=user_id, blaster=current_user.id, slot_id=slot.id, status='')
+            db.session.add(blast)
 
         db.session.add(slot)
-        db.session.add(blast)
         db.session.commit()
+        # TODO Send email
         flash('Dog Blast dispatched to selected recipients')
         return redirect(url_for('view_schedule'))
     return render_template('dog_blast.html', title='Dog Blast', form=form, dog=dog.dog_name)
@@ -511,6 +559,7 @@ def blast_contacts():
     users = [x.recipient for x in blast_config]
 
     if form.validate_on_submit():
+        # Lookup selected user
         if BlastConfig.query.filter_by(recipient=form.user.data, blast_owner=current_user).first():
             # already exists
             flash('Contact already exists')
@@ -530,3 +579,83 @@ def remove_user(user):
     db.session.delete(bc)
     db.session.commit()
     return redirect(url_for('blast_contacts'))
+
+# @app.route('/active_blast')
+# @login_required
+# def active_blast():
+#     # TODO filter to exclude past blasts
+#     active = Blast.query.filter_by(receiver=current_user.username).all()
+#     return render_template('active_blast.html', active=active) 
+
+@app.route('/accept_blast/<blast_id>', methods=['GET', 'POST'])
+@login_required
+def accept_blast(blast_id):
+    blast = Blast.query.filter_by(id=blast_id, receiver=current_user.id).first()
+    form = BookingForm()
+    dog_name = blast.slot.subject.dog_name
+
+    if form.validate_on_submit():
+        user_id = current_user
+        # Update blast record
+        blast.status = 'BOOKED'
+
+        # Update parent slot
+        blast.slot.status = 'BOOKED'
+        blast.slot.booker = current_user
+        blast.comments = form.comments.data
+        db.session.commit()
+        # TODO
+        # send_accepted_email()
+        return redirect(url_for('confirmed', slot=blast.slot.id))
+
+    return render_template('book_slot.html', title='Slot booked', slot=blast.slot, dog_name=dog_name, form=form)
+
+def update_rejection_status(slot):
+    """If all responses are rejected then update slot"""
+    blasts = slot.blasts.all()
+    if all([x.status == 'REJECTED' for x in blasts]):
+        slot.status = 'REJECTED'
+        db.session.commit()
+        # TODO
+        # send_all_rejected()
+
+
+@app.route('/reject_blast/<blast_id>')
+@login_required
+def reject_blast(blast_id):
+    # Update blast record
+    blast = Blast.query.filter_by(receiver=current_user.id, id=blast_id).first()
+    blast.status = 'REJECTED'
+    db.session.commit()
+    flash('Incoming blast rejected!')
+    # send_rejection_email()
+    update_rejection_status(blast.slot)
+    # TODO My Bookings needs to show accepted dog blasts
+    return redirect(url_for('index'))
+
+
+@app.route('/blast/<blast_id>')
+@login_required
+def view_blast(blast_id):
+    active = Blast.query.filter_by(id=blast_id, receiver=current_user.id).first()
+    if not active:
+        flash('Invalid Blast selected')
+        return redirect(url_for('index'))
+    return render_template('show_blast.html', blast=active) 
+
+@app.route('/my_blast/<slot_id>')
+@login_required
+def my_blast(slot_id):
+    blast_slot = Slot.query.filter_by(id=slot_id).first()
+    verify = blast_slot.subject.owner.id == current_user.id
+    if not blast_slot:
+        flash('Invalid Blast selected')
+        return redirect(url_for('index'))
+
+    if not verify:
+        flash('Illegal blast selected!')
+        return redirect(url_for('index'))
+    
+    blasts = blast_slot.blasts.all()
+    return render_template('my_blast.html', slot=blast_slot, blasts=blasts) 
+
