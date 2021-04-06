@@ -1,17 +1,24 @@
-from app import app
+from app import app, db
 import datetime
-from flask import render_template, flash, redirect, url_for, request, abort, send_from_directory
-from flask_login import login_user, logout_user, current_user, login_required
-from app.models import User, Dog, Slot, BlastConfig, Blast
-from werkzeug.urls import url_parse
-from app.forms import RegistrationForm, LoginForm, RegistrationDogForm, ScheduleForm, EditDogForm, ResetPasswordForm, ResetPasswordRequestForm, BookingForm, RepeatScheduleForm, DogBlastForm, DogBlastContacts
-from app import db
-from app.email_utils import send_password_reset_email, send_new_booking_email, send_cancellation_email, send_deletion_email
-from app.enums import BOOKED, FREE
-from functools import wraps
-import os
 import imghdr
+import os
 import random
+from functools import wraps
+
+from flask import (abort, flash, redirect, render_template, request,
+                   send_from_directory, url_for)
+from flask_login import current_user, login_required, login_user, logout_user
+from werkzeug.urls import url_parse
+
+
+from app.email_utils import (send_cancellation_email, send_deletion_email,
+                             send_new_booking_email, send_password_reset_email)
+from app.enums import BOOKED, FREE
+from app.forms import (BookingForm, DogBlastContacts, DogBlastForm,
+                       EditDogForm, LoginForm, RegistrationDogForm,
+                       RegistrationForm, RepeatScheduleForm, ResetPasswordForm,
+                       ResetPasswordRequestForm, ScheduleForm, WithdrawBlast)
+from app.models import Blast, BlastConfig, Dog, Slot, User
 
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.jpeg']
@@ -109,8 +116,9 @@ def get_number_of_upcoming_available():
 @login_required
 def index():
     # check for incoming dog blasts
-    # TODO need to take into account date
     blasts = Blast.query.filter_by(receiver=current_user.id).filter_by(status='').all()
+    blasts = [x for x in blasts if x.slot.status != BOOKED]
+    blasts = [x for x in blasts if datetime.datetime.strptime(x.slot.date, '%Y-%m-%d').date() >= datetime.date.today()]
     if blasts:
         for blast in blasts:
             sender = blast.slot.subject.owner.username
@@ -120,8 +128,8 @@ def index():
 
     # check for active blasts
     blast_slots = Slot.query.filter_by(slot_type='BLAST').all()
-    # TODO need to take into account date
     blast_slots = [x for x in blast_slots if x.subject.owner.id == current_user.id]
+    blast_slots = [x for x in blast_slots if datetime.datetime.strptime(x.date, '%Y-%m-%d').date() >= datetime.date.today()]
     if blast_slots:
         for slot in blast_slots:
             link = url_for('my_blast', slot_id = slot.id)
@@ -226,7 +234,6 @@ def edit_dog():
 @app.route('/view_dogs')
 @login_required
 def view_dogs():
-    # TODO Don't show Dog blasts
     dogs = Dog.query.all()
     res = []
     for dog in dogs:
@@ -338,7 +345,7 @@ def new_slot():
     if form.validate_on_submit():
         user_id = current_user
         subject = Dog.query.filter_by(dog_name=dog.dog_name).first()
-        slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject, status=FREE, comments='')
+        slot = Slot(date=form.date.data, start=form.start.data, end=form.end.data, subject=subject, status=FREE, comments='', slot_type='SOCIAL')
         db.session.add(slot)
         db.session.commit()
         flash('New slot added')
@@ -522,6 +529,9 @@ def dog_blast():
         flash('Please register a dog to your account.')
         return redirect(url_for('view_schedule'))
 
+    if not BlastConfig.query.filter_by(blaster=user_id).all():
+        return redirect(url_for('blast_contacts'))
+
     dog_name = dog.dog_name
 
     if form.validate_on_submit():
@@ -591,16 +601,20 @@ def remove_user(user):
 @login_required
 def accept_blast(blast_id):
     blast = Blast.query.filter_by(id=blast_id, receiver=current_user.id).first()
+    if not blast:
+        flash('Invalid Blast selected')
+        return redirect(url_for('index'))
+
     form = BookingForm()
     dog_name = blast.slot.subject.dog_name
 
     if form.validate_on_submit():
         user_id = current_user
         # Update blast record
-        blast.status = 'BOOKED'
+        blast.status = BOOKED
 
         # Update parent slot
-        blast.slot.status = 'BOOKED'
+        blast.slot.status = BOOKED
         blast.slot.booker = current_user
         blast.comments = form.comments.data
         db.session.commit()
@@ -638,14 +652,19 @@ def reject_blast(blast_id):
 @login_required
 def view_blast(blast_id):
     active = Blast.query.filter_by(id=blast_id, receiver=current_user.id).first()
+
     if not active:
         flash('Invalid Blast selected')
         return redirect(url_for('index'))
+    if active.slot.status == BOOKED:
+        flash('Sorry, this blast has been accepted by another user.')
+        return redirect(url_for('index'))
     return render_template('show_blast.html', blast=active) 
 
-@app.route('/my_blast/<slot_id>')
+@app.route('/my_blast/<slot_id>', methods=['GET', 'POST'])
 @login_required
 def my_blast(slot_id):
+    """Ability for User to see a blast they have sent based on a given slot_id."""
     blast_slot = Slot.query.filter_by(id=slot_id).first()
     verify = blast_slot.subject.owner.id == current_user.id
     if not blast_slot:
@@ -657,5 +676,14 @@ def my_blast(slot_id):
         return redirect(url_for('index'))
     
     blasts = blast_slot.blasts.all()
-    return render_template('my_blast.html', slot=blast_slot, blasts=blasts) 
+    form = WithdrawBlast()
+    if form.submit.data:
+        for blast in blasts:
+            db.session.delete(blast)
+        db.session.delete(blast_slot)
+        db.session.commit()
+        flash('Your blast has been removed!')
+        # TODO email users to notify blast has been cancelled by user
+        return redirect(url_for('index'))
+    return render_template('my_blast.html', slot=blast_slot, blasts=blasts, form=form) 
 

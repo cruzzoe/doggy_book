@@ -13,7 +13,6 @@
         </div>
         <p> To use dog blast you need to pick contacts who you are happy to leave your dog with</p>
         <p> Find the user you wish to add and click Add. Should you need to remove the user, click remove in the table below. </p>
-        <p> Once happy with your choice, click on the Save button. </p>
 
         <form action="" method="post">
             {{ form.hidden_tag() }}
@@ -26,7 +25,7 @@
                 </p>
 
                 <p>
-                {{ form.submit(class_="btn btn-primary btn-xl") }}
+                {{ form.submit(class_="btn btn-primary btn-l") }}
                 </p>
         <br></br>
         <table class="table table-hover">
@@ -44,10 +43,12 @@
                 <td><a href="{{ url_for('remove_user', user=user ) }}">Remove user!</a></td>
             </tr>
             {% endfor %}
-        
+            
     </tbody>
 </table>
-<!-- {{ form.save(class_="btn btn-primary btn-xl") }} -->
+<br></br>
+<a href="{{ url_for('dog_blast') }}"> When happy with your selected users, click here to send a DOG BLAST</a>
+
 </form>
         
     </div>

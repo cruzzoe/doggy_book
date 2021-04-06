@@ -116,4 +116,6 @@ class DogBlastForm(FlaskForm):
 class DogBlastContacts(FlaskForm):
     user = SelectField('User', validate_choice=True)
     submit = SubmitField('Add User')
-    save = SubmitField('Save')
+
+class WithdrawBlast(FlaskForm):
+    submit = SubmitField('Withdraw Blast')
