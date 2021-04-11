@@ -1,0 +1,15 @@
+<p>Dear {{ blast.blast_receiver.first_name }},</p>
+<p>
+    {{ slot.subject.owner.first_name }} {{ slot.subject.owner.last_name }} has CANCELLED the Dog Blast below:
+    <p>Dog: {{ slot.subject.dog_name }}</p>
+    <p>Date: {{ slot.date }}</p>
+    <p>Start time: {{ slot.start }}</p>
+    <p>End time: {{ slot.end }}</p>
+    <p>Comments: {{ slot.comments }}</p>
+
+</p>
+
+<p>Sincerely,</p>
+<p>The Doggy Booker Team</p>
+
+<a href="dogbooker.co.uk">https://dogbooker.co.uk</a>

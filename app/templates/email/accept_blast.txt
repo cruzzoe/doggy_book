@@ -1,0 +1,16 @@
+<p>Dear {{ blast.blast_receiver.first_name }} & {{ slot.subject.owner.first_name }},</p>
+<p>
+    <p>The booking below has been accepted. Please arrange the session.</p>
+    <p>Dog: {{ slot.subject.dog_name }}</p>
+    <p>Date: {{ slot.date }}</p>
+    <p>Start time: {{ slot.start }}</p>
+    <p>End time: {{ slot.end }}</p>
+    <p>Comments: {{ slot.comments }}</p>
+
+    <a href="{{ link }}">Click here to respond to new dog blast</a>
+</p>
+
+<p>Sincerely,</p>
+<p>The Doggy Booker Team</p>
+
+<a href="dogbooker.co.uk">https://dogbooker.co.uk</a>

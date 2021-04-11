@@ -1,0 +1,15 @@
+<p>Dear {{ blast.slot.subject.owner.first_name }},</p>
+<p>
+    Your blast sent to {{ blast.blast_receiver.first_name}} {{ blast.blast_receiver.last_name }} has been declined.
+    <p>Dog: {{ slot.subject.dog_name }}</p>
+    <p>Date: {{ slot.date }}</p>
+    <p>Start time: {{ slot.start }}</p>
+    <p>End time: {{ slot.end }}</p>
+
+    <a href="{{ link }}">Click here to view your blast status</a>
+</p>
+
+<p>Sincerely,</p>
+<p>The Doggy Booker Team</p>
+
+<a href="dogbooker.co.uk">https://dogbooker.co.uk</a>

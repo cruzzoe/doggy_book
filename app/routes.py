@@ -12,7 +12,7 @@ from werkzeug.urls import url_parse
 
 
 from app.email_utils import (send_cancellation_email, send_deletion_email,
-                             send_new_booking_email, send_password_reset_email)
+                             send_new_booking_email, send_password_reset_email, send_new_blast, send_rejected_blast, send_withdrawn_blast, send_blast_fulfilled_email, send_accepted_blast)
 from app.enums import BOOKED, FREE
 from app.forms import (BookingForm, DogBlastContacts, DogBlastForm,
                        EditDogForm, LoginForm, RegistrationDogForm,
@@ -282,7 +282,8 @@ def confirmed():
     # slot.booked_timestamp = datetime.datetime.utcnow()
     db.session.add(slot)
     db.session.commit()
-    send_new_booking_email(slot)
+    if slot.slot_type == 'SOCIAL':
+        send_new_booking_email(slot)
     flash('You\'re booking is confirmed! An email has been sent to both parties.')
     return redirect(url_for('bookings'))
 
@@ -553,6 +554,7 @@ def dog_blast():
         db.session.add(slot)
         db.session.commit()
         # TODO Send email
+        send_new_blast(slot)
         flash('Dog Blast dispatched to selected recipients')
         return redirect(url_for('view_schedule'))
     return render_template('dog_blast.html', title='Dog Blast', form=form, dog=dog.dog_name)
@@ -570,10 +572,7 @@ def blast_contacts():
 
     if form.validate_on_submit():
         # Lookup selected user
-        if BlastConfig.query.filter_by(recipient=form.user.data, blast_owner=current_user).first():
-            # already exists
-            flash('Contact already exists')
-        else:
+        if not BlastConfig.query.filter_by(recipient=form.user.data, blast_owner=current_user).first():
             bc = BlastConfig(recipient=form.user.data, blast_owner=current_user)
             db.session.add(bc)
             db.session.commit()
@@ -618,8 +617,9 @@ def accept_blast(blast_id):
         blast.slot.booker = current_user
         blast.comments = form.comments.data
         db.session.commit()
-        # TODO
-        # send_accepted_email()
+
+        send_accepted_blast(blast)
+        send_blast_fulfilled_email(blast.slot)
         return redirect(url_for('confirmed', slot=blast.slot.id))
 
     return render_template('book_slot.html', title='Slot booked', slot=blast.slot, dog_name=dog_name, form=form)
@@ -643,6 +643,7 @@ def reject_blast(blast_id):
     db.session.commit()
     flash('Incoming blast rejected!')
     # send_rejection_email()
+    send_rejected_blast(blast)
     update_rejection_status(blast.slot)
     # TODO My Bookings needs to show accepted dog blasts
     return redirect(url_for('index'))
@@ -666,10 +667,12 @@ def view_blast(blast_id):
 def my_blast(slot_id):
     """Ability for User to see a blast they have sent based on a given slot_id."""
     blast_slot = Slot.query.filter_by(id=slot_id).first()
-    verify = blast_slot.subject.owner.id == current_user.id
+    
     if not blast_slot:
         flash('Invalid Blast selected')
         return redirect(url_for('index'))
+
+    verify = blast_slot.subject.owner.id == current_user.id
 
     if not verify:
         flash('Illegal blast selected!')
@@ -678,12 +681,14 @@ def my_blast(slot_id):
     blasts = blast_slot.blasts.all()
     form = WithdrawBlast()
     if form.submit.data:
+        flash('Your blast has been removed!')
+        send_withdrawn_blast(blast_slot)
+
         for blast in blasts:
             db.session.delete(blast)
         db.session.delete(blast_slot)
         db.session.commit()
-        flash('Your blast has been removed!')
-        # TODO email users to notify blast has been cancelled by user
+
         return redirect(url_for('index'))
     return render_template('my_blast.html', slot=blast_slot, blasts=blasts, form=form) 
 

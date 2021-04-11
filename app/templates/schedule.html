@@ -55,7 +55,13 @@
             <td>{{slot.end}}</td> 
             <td>{{slot.booker.username}}</td>
             <td>{{slot.comments}}</td>
+            {% if slot.slot_type == 'SOCIAL' %}
             <td><a href="{{ url_for('delete_slot', slot=slot.id) }}">Delete Slot</a></td> 
+            {% endif %}
+            
+            {% if slot.slot_type == 'BLAST' %}
+            <td><a href="{{ url_for('my_blast', slot_id=slot.id) }}">Dog Blast</a></td> 
+            {% endif %}
         </tr>
         {% endfor %}
     </table>

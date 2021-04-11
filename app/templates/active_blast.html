@@ -19,25 +19,24 @@
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Owner</th>
-            <th scope="col">Date</th>
-            <th scope="col">Start</th>
-            <th scope="col">End</th>
             <th scope="col">Comments</th>
             <th scope="col">Accept</th>
-            <th scope="col">Decline</th>
+            <th scope="col">Reject</th>
           </tr>
         </thead>
         <tbody>
+            
+            {% for blast in active %}
             <tr>
                 <td>{{blast.slot.subject.dog_name}}</td>
                 <td>{{blast.slot.subject.owner.first_name}}</td>
-                <td>{{blast.slot.date}}</td>
-                <td>{{blast.slot.start}}</td>
-                <td>{{blast.slot.end}}</td>
                 <td>{{blast.slot.comments}} </td>
                 <td><a href="{{ url_for('accept_blast', blast_id=blast.id) }}">Accept</a></td>
-                <td><a href="{{ url_for('reject_blast', blast_id=blast.id) }}">Decline</a></td>
-            </tr>         
+                <td><a href="{{ url_for('reject_blast', blast_id=blast.id) }}">Reject</a></td>
+            </tr>
+            {% endfor %}
+            
         </tbody>
     </table>
+    <p>To skip response & proceed to send new Dog Blast, <a href="{{ url_for('dog_blast', skip=1) }}">click here</a></p>
 {% endblock %}

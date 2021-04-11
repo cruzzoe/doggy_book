@@ -7,6 +7,8 @@ import os
 from ics import Calendar, Event
 import datetime
 
+from flask import url_for
+
 
 def send_async_email(app, msg):
     with app.app_context():
@@ -113,3 +115,97 @@ def send_deletion_email(slot):
                                     slot=slot),
         html_body=render_template('email/deletion.html',
                                     slot=slot))
+
+def send_new_blast(slot):
+    """New blast created. Recipients and blaster must receive a message"""
+    blaster_email = slot.subject.owner.email
+    
+    send_new_blast_blaster(slot)
+
+    for blast in slot.blasts:
+        link = url_for('view_blast', blast_id=blast.id, _external=True)
+        recipient_email = blast.blast_receiver.email
+        send_blast_individual(recipient_email, blast, link)
+
+def send_blast_individual(recipient_email, blast, link):
+    """Send email to recipient of Dog Blast to notify of new dog blast."""
+    send_email('New Dog Blast Received',
+    sender=app.config['ADMINS'][0],
+    recipients=[recipient_email],
+    text_body=render_template('email/new_blast.html', blast=blast,
+                                slot=blast.slot, link=link),
+    html_body=render_template('email/new_blast.html', blast=blast,
+                                slot=blast.slot, link=link))
+
+def send_withdrawn_blast_individual(recipient_email, blast):
+    """Send email to recipient of Dog Blast to notify of withdrawn dog blast."""
+    send_email('Dog Blast Cancelled!',
+    sender=app.config['ADMINS'][0],
+    recipients=[recipient_email],
+    text_body=render_template('email/withdrawn_blast.html', blast=blast,
+                                slot=blast.slot),
+    html_body=render_template('email/withdrawn_blast.html', blast=blast,
+                                slot=blast.slot))
+
+def send_blast_fulfilled_individual(recipient_email, blast):
+    """Send email to recipient of Dog Blast to notify of fulfilled dog blast by other user."""
+    send_email('Dog Blast Fulfilled',
+    sender=app.config['ADMINS'][0],
+    recipients=[recipient_email],
+    text_body=render_template('email/fulfilled_blast.txt', blast=blast,
+                                slot=blast.slot),
+    html_body=render_template('email/fulfilled_blast.html', blast=blast,
+                                slot=blast.slot))
+
+def send_new_blast_blaster(slot):
+    """Notify blaster of their new blast"""
+    blaster_email = slot.subject.owner.email
+    link = url_for('my_blast', slot_id=slot.id, _external=True)
+    send_email('Dog Blast created',
+    sender=app.config['ADMINS'][0],
+    recipients=[blaster_email],
+    text_body=render_template('email/blast_details.txt',
+                                slot=slot, link=link),
+    html_body=render_template('email/blast_details.html',
+                                slot=slot, link=link))
+
+def send_rejected_blast(blast):
+    """User rejects a blast_received. Email received by blaster."""
+    blaster_email = blast.slot.subject.owner.email
+    link = url_for('my_blast', slot_id=blast.slot.id, _external=True)
+    send_email('Dog Blast rejected',
+    sender=app.config['ADMINS'][0],
+    recipients=[blaster_email],
+    text_body=render_template('email/reject_blast.txt', blast=blast,
+                                slot=blast.slot, link=link),
+    html_body=render_template('email/reject_blast.html', blast=blast,
+                                slot=blast.slot, link=link))
+
+def send_accepted_blast(blast):
+    """User accepts a blast_received. Email received by blaster and receiver."""
+    blaster_email = blast.slot.subject.owner.email
+    link = url_for('my_blast', slot_id=blast.slot.id, _external=True)
+    send_email('Dog Blast accepted!',
+    sender=app.config['ADMINS'][0],
+    recipients=[blaster_email, blast.blast_receiver.email],
+    text_body=render_template('email/accept_blast.txt', blast=blast,
+                                slot=blast.slot, link=link),
+    html_body=render_template('email/accept_blast.html', blast=blast,
+                                slot=blast.slot, link=link))
+
+def send_withdrawn_blast(slot):
+    # blaster_email = slot.subject.owner.email
+
+    for blast in slot.blasts:
+        if blast.status != 'REJECTED':
+            recipient_email = blast.blast_receiver.email
+            send_withdrawn_blast_individual(recipient_email, blast)
+
+
+def send_blast_fulfilled_email(slot):    
+    for blast in slot.blasts:
+        # Don't send email mentioning fufilled to booker
+        if blast.slot.booker.id == blast.receiver:
+            continue
+        recipient_email = blast.blast_receiver.email
+        send_blast_fulfilled_individual(recipient_email, blast)

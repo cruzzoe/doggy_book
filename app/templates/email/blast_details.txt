@@ -1,0 +1,16 @@
+<p>Dear {{ slot.subject.owner.first_name }},</p>
+<p>
+    You have created a Dog Blast:
+    <p>Dog: {{ slot.subject.dog_name }}</p>
+    <p>Date: {{ slot.date }}</p>
+    <p>Start time: {{ slot.start }}</p>
+    <p>End time: {{ slot.end }}</p>
+    <p>Comments: {{ slot.comments }}</p>
+
+    <a href="{{ link }}">Click here to view your blast status</a>
+</p>
+
+<p>Sincerely,</p>
+<p>The Doggy Booker Team</p>
+
+<a href="dogbooker.co.uk">https://dogbooker.co.uk</a>

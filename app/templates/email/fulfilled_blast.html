@@ -1,0 +1,15 @@
+<p>Dear {{ blast.blast_receiver.first_name }},</p>
+<p>
+    The blast sent by {{ slot.subject.owner.first_name }} {{ slot.subject.owner.last_name }} has been fulfilled by another user. This doggy no longer needs care for the slot below:
+    <p>Dog: {{ slot.subject.dog_name }}</p>
+    <p>Date: {{ slot.date }}</p>
+    <p>Start time: {{ slot.start }}</p>
+    <p>End time: {{ slot.end }}</p>
+    <p>Comments: {{ slot.comments }}</p>
+
+</p>
+
+<p>Sincerely,</p>
+<p>The Doggy Booker Team</p>
+
+<a href="dogbooker.co.uk">https://dogbooker.co.uk</a>
